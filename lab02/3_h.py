@@ -6,7 +6,8 @@ from typing import List
 def filter_download_location() -> List[str]:
     
     filtered_requests = []
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             download_location = line.split()[0]

@@ -4,9 +4,12 @@ from retrieve_data import retrieve_data
 def reduce_request(request_code: str) -> int:
     
     request_count = 0
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
+        
         try:
-            if line.split()[8] == request_code:
+            curr_request_code = line.split()[8]
+            if curr_request_code == request_code:
                 request_count += 1
         except:
             continue

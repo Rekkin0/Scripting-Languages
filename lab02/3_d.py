@@ -6,7 +6,8 @@ def reduce_image_ratio() -> float:
     total_resource_count = 0
     image_count = 0
     image_formats = (".gif", ".jpg", ".jpeg", ".xbm")
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             if line.split()[6].endswith(image_formats):

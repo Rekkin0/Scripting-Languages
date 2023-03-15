@@ -7,7 +7,8 @@ from datetime import datetime
 def filter_download_date() -> List[str]:
     
     filtered_requests = []
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             download_datetime = line.split()[3].split("[")[1].split(":")

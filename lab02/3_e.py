@@ -6,7 +6,8 @@ from typing import List
 def filter_requests() -> List[str]:
     
     filtered_requests = []
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             request_code = line.split()[8]

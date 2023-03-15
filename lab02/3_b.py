@@ -4,7 +4,8 @@ from retrieve_data import retrieve_data
 def reduce_resource_size() -> float:
     
     total_resource_size = 0
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             resource_size = line.split()[9]

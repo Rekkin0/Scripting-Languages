@@ -7,7 +7,8 @@ def reduce_largest_resource() -> Tuple[str, int]:
     
     largest_resource_size = 0
     largest_resource_path = ""
-    for line in retrieve_data().splitlines(True):
+    data = retrieve_data().splitlines(True)
+    for line in data:
         
         try:
             resource_path, resource_size = line.split()[6], line.split()[9]
