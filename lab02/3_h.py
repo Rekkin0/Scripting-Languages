@@ -5,18 +5,18 @@ from typing import List
 
 def filter_download_location() -> List[str]:
     
-    filtered_requests = []
+    filtered_download_locations = []
     data = retrieve_data().splitlines(True)
     for line in data:
         
         try:
             download_location = line.split()[0]
             if download_location.endswith(".pl"):
-                filtered_requests.append(line)
+                filtered_download_locations.append(line)
         except:
             continue
 
-    return filtered_requests
+    return filtered_download_locations
 
 
 if __name__ == "__main__":

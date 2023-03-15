@@ -6,7 +6,7 @@ from datetime import datetime
 
 def filter_download_date() -> List[str]:
     
-    filtered_requests = []
+    filtered_download_dates = []
     data = retrieve_data().splitlines(True)
     for line in data:
         
@@ -16,11 +16,11 @@ def filter_download_date() -> List[str]:
             download_month_number = datetime.strptime(download_date[1], "%b").month
             download_day = datetime(int(download_date[2]), download_month_number, int(download_date[0])).strftime("%A")
             if download_day == "Friday":
-                filtered_requests.append(line)
+                filtered_download_dates.append(line)
         except:
             continue
         
-    return filtered_requests
+    return filtered_download_dates
 
 
 if __name__ == "__main__":
