@@ -37,8 +37,7 @@ def read_log() -> List[Tuple]:
             else:
                 resource_size = int(line[9])
             
-            log.append((host, datetime, http_method, resource_path, 
-                        http_version, http_code, resource_size))
+            log.append((host, datetime, http_method, resource_path, http_version, http_code, resource_size))
         except EOFError:
             break
         except:
@@ -90,4 +89,4 @@ def get_entries_by_extension(log: List[Tuple], extension: str) -> List[Tuple]:
 
 def print_entries(log: List[Tuple]) -> None:
     
-    print(*log, sep = '\n')
+    print(*log, sep = '\n')\
