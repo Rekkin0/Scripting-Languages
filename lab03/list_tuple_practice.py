@@ -89,4 +89,4 @@ def get_entries_by_extension(log: List[Tuple], extension: str) -> List[Tuple]:
 
 def print_entries(log: List[Tuple]) -> None:
     
-    print(*log, sep = '\n')\
+    print(*log, sep = '\n')

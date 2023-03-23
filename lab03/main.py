@@ -27,4 +27,4 @@ if __name__ == '__main__':
     log_dict = log_to_dict(log)
     hosts = get_addrs(log_dict)
     # print(*hosts, sep = '\n')
-    print_dict_entry_dates(log_dict)
+    # print_dict_entry_dates(log_dict)
