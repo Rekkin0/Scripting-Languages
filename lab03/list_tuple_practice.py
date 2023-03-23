@@ -47,6 +47,7 @@ def read_log() -> List[Tuple]:
 
 
 def sort_log(log: List[Tuple], sort_by: int) -> List[Tuple]:
+    
     try:
         sorted_log = sorted(log, key = lambda tuple: tuple[sort_by])
         return sorted_log    
