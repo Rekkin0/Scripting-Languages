@@ -38,7 +38,7 @@ def print_dict_entry_dates(log_dict: Dict[str, List[Dict[str, Any]]]) -> None:
         first_request_date    = value[0]['datetime']
         last_request_date     = value[-1]['datetime']
         total_request_count   = len(value)
-        success_request_count = len([entry for entry in value if entry['http_code'] == 200])
-        success_request_ratio   = round(success_request_count / total_request_count, 2)
+        success_request_count = sum([1 for entry in value if entry['http_code'] == 200])
+        success_request_ratio = round(success_request_count / total_request_count, 2)
         
         print(f"{host:<53}\t{total_request_count}\t{first_request_date}\t{last_request_date}\t{success_request_ratio}")
