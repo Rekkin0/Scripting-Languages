@@ -23,7 +23,9 @@ def read_log() -> List[Tuple]:
     log = []
     
     while True:
+
         try:
+            # (.+) - - \[(.+)\] \"(.+)\" (.+) (.+)
             line = input().split()
             
             host          = line[0]
@@ -78,10 +80,8 @@ def get_failed_reads(log: List[Tuple], join_entries: bool = False) -> List[Tuple
     entries_4xx = [entry for entry in log if entry[5] // 100 == 4]
     entries_5xx = [entry for entry in log if entry[5] // 100 == 5]
     
-    if join_entries:
-        return entries_4xx + entries_5xx
-    return entries_4xx, entries_5xx
-    
+    return entries_4xx + entries_5xx if join_entries else entries_4xx, entries_5xx
+
     
 def get_entries_by_extension(log: List[Tuple], extension: str) -> List[Tuple]:
     

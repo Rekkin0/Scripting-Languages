@@ -3,15 +3,8 @@ from typing import List, Tuple, Dict, Any
 
 def entry_to_dict(entry: Tuple) -> Dict[str, Any]:
     
-    return {
-        'host'         : entry[0],
-        'datetime'     : entry[1],
-        'http_method'  : entry[2],
-        'resource_path': entry[3],
-        'http_version' : entry[4],
-        'http_code'    : entry[5],
-        'resource_size': entry[6]
-    }
+    keys = ('host', 'datetime', 'http_method', 'resource_path', 'http_version', 'http_code', 'resource_size')
+    return dict(zip(keys, entry))
 
 
 def log_to_dict(log: List[Tuple]) -> Dict[str, List[Dict[str, Any]]]:

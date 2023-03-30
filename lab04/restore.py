@@ -1,4 +1,4 @@
-import os, sys, subprocess, json
+import os, sys, subprocess, csv
 from pathlib import Path
 from datetime import datetime
 
@@ -8,9 +8,9 @@ BACKUPS_DIR = Path(os.getenv("BACKUPS_DIR") or "~/.backups").expanduser().resolv
 
 def choose_backup():
         
-    journal = Path(BACKUPS_DIR) / "journal.json"
+    journal = Path(BACKUPS_DIR) / "journal.csv"
     with open(journal, "r") as file:
-        journal_data = json.load(file)
+        journal_data = list(csv.DictReader(file))
     
     print("Archived backups (most recent first):")
     for i, entry in enumerate(journal_data[::-1]):
@@ -32,11 +32,15 @@ def restore_backup(backup_name: str):
         dirpath = Path(sys.argv[1]).expanduser().resolve()
         if not dirpath.is_dir():
             raise Exception(f"{dirpath} is not a directory")
-        
+    
+    for root, dirs, files in os.walk(dirpath, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+
     backup = BACKUPS_DIR / backup_name
-    for file in dirpath.glob("*"):
-        file.unlink()
-    subprocess.run(["tar", "-C", dirpath, "-zxf", backup])
+    subprocess.run(["unzip", "-q", backup, "-d", dirpath], cwd=BACKUPS_DIR)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import os, sys, subprocess, json
+import os, sys, subprocess, csv
 from pathlib import Path
 from datetime import datetime
 
@@ -15,36 +15,32 @@ def create_backup() -> str:
         raise Exception(f"{dirpath} is not a directory")
         
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    extension = 'tar.gz'
+    extension = 'zip'
     backup_name = f"{timestamp}-{dirpath.name}.{extension}"
     
-    subprocess.run(["tar", "-C", dirpath, "-zcf", backup_name, "."])
-    subprocess.run(["mv", backup_name, BACKUPS_DIR])
+    subprocess.run(["zip", "-qr", backup_name, ".", "-i", "*"], cwd=dirpath)
+    subprocess.run(["mv", backup_name, BACKUPS_DIR], cwd=dirpath)
     
     return backup_name
     
 
 def journal_backup(backup_name: str) -> None:
     
-    journal = Path(BACKUPS_DIR) / "journal.json"
-    journal.touch(exist_ok=True)
+    journal = Path(BACKUPS_DIR) / "journal.csv"
     
     entry = {
         "timestamp": backup_name[:19],
         "dirpath"  : str(Path(sys.argv[1]).expanduser().resolve()),
         "filename" : backup_name
     }
-      
-    journal_data = []
-    with open(journal, "r") as file:
-        try:
-            journal_data = json.load(file)
-        except json.decoder.JSONDecodeError:
-            pass
     
-    journal_data.append(entry)
-    with open(journal, "w") as file:
-        json.dump(journal_data, file, indent=4)   
+    journal_exists = journal.is_file()
+    
+    with open(journal, "a") as file:
+        writer = csv.DictWriter(file, fieldnames=entry.keys())
+        if not journal_exists:
+            writer.writeheader()
+        writer.writerow(entry)  
     
 
 if __name__ == "__main__":
