@@ -1,20 +1,15 @@
-from retrieve_data import retrieve_data
-
-from typing import List
+from utils import retrieve_data, process_data, get_timestamp
+from typing import List, Match
 from datetime import datetime
 
 
-def filter_download_date(data: List[str]) -> List[str]:
-    
+def filter_download_date(data: List[Match[str]]) -> List[str]:
     filtered_download_dates = []
     for line in data:
-        
         try:
-            download_datetime = line.split()[3].split("[")[1].split(":")
-            download_date = download_datetime[0].split("/")
-            download_month_number = datetime.strptime(download_date[1], "%b").month
-            download_day = datetime(int(download_date[2]), download_month_number, int(download_date[0])).strftime("%A")
-            if download_day == "Friday":
+            timestamp = get_timestamp(line)
+            date_time = datetime.strptime(timestamp, "%d/%b/%Y:%H:%M:%S")
+            if date_time.weekday == 4:
                 filtered_download_dates.append(line)
         except:
             continue
@@ -24,5 +19,6 @@ def filter_download_date(data: List[str]) -> List[str]:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     print(*filter_download_date(data))

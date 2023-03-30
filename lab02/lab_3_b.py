@@ -1,18 +1,12 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data, get_resource_size
+from typing import List, Match
 
-from typing import List
 
-
-def reduce_resource_size(data: List[str]) -> float:
-    
+def reduce_resource_size(data: List[Match[str]]) -> float:
     total_resource_size = 0
     for line in data:
-        
         try:
-            resource_size = line.split()[9]
-            if resource_size == "-":
-                continue
-            total_resource_size += int(resource_size)
+            total_resource_size += int(get_resource_size(line))
         except:
             continue
 
@@ -21,5 +15,6 @@ def reduce_resource_size(data: List[str]) -> float:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data) 
     print(f"{reduce_resource_size(data)} GB")

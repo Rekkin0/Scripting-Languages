@@ -1,16 +1,12 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data, get_status_code
+from typing import List, Match
 
-from typing import List
 
-
-def filter_requests(data: List[str]) -> List[str]:
-    
+def filter_requests(data: List[Match[str]]) -> List[str]:
     filtered_requests = []
     for line in data:
-        
         try:
-            request_code = line.split()[8]
-            if request_code == "200":
+            if get_status_code(line) == "200":
                 filtered_requests.append(line)
         except:
             continue
@@ -20,5 +16,6 @@ def filter_requests(data: List[str]) -> List[str]:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     print(*filter_requests(data))

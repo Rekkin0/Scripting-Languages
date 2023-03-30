@@ -1,17 +1,15 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data, get_timestamp
+from typing import List, Match
+from datetime import datetime
 
-from typing import List
 
-
-def filter_download_time(data: List[str]) -> List[str]:
-    
+def filter_download_time(data: List[Match[str]]) -> List[str]:
     filtered_download_times = []
     for line in data:
-        
         try:
-            download_datetime = line.split()[3].split("[")[1].split(":")
-            download_hour = int(download_datetime[1])
-            if download_hour >= 22 or download_hour < 6:
+            timestamp = get_timestamp(line)
+            date_time = datetime.strptime(timestamp, "%d/%b/%Y:%H:%M:%S")
+            if date_time.hour >= 22 or date_time.hour < 6:
                 filtered_download_times.append(line)
         except:
             continue
@@ -21,5 +19,6 @@ def filter_download_time(data: List[str]) -> List[str]:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     print(*filter_download_time(data))

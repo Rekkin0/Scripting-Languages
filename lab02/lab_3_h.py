@@ -1,16 +1,13 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data, get_host
+from typing import List, Match
 
-from typing import List
 
-
-def filter_download_location(data: List[str]) -> List[str]:
-    
+def filter_download_location(data: List[Match[str]]) -> List[str]:
     filtered_download_locations = []
     for line in data:
-        
         try:
-            download_location = line.split()[0]
-            if download_location.endswith(".pl"):
+            host = get_host(line)
+            if host.endswith(".pl"):
                 filtered_download_locations.append(line)
         except:
             continue
@@ -20,5 +17,6 @@ def filter_download_location(data: List[str]) -> List[str]:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     print(*filter_download_location(data))

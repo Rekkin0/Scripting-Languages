@@ -1,17 +1,14 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data, get_resource_path
+from typing import List, Match
 
-from typing import List
 
-
-def reduce_image_ratio(data: List[str]) -> float:
-    
+def reduce_image_ratio(data: List[Match[str]]) -> float:
     image_count = 0
-    image_formats = (".gif", ".jpg", ".jpeg", ".xbm")
+    image_extensions = (".gif", ".jpg", ".jpeg", ".xbm")
     other_resource_count = 0
     for line in data:
-        
         try:
-            if line.split()[6].endswith(image_formats):
+            if get_resource_path(line).endswith(image_extensions):
                 image_count += 1
             else:
                 other_resource_count += 1
@@ -23,5 +20,6 @@ def reduce_image_ratio(data: List[str]) -> float:
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     print(reduce_image_ratio(data))

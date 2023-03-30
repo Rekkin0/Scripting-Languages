@@ -1,10 +1,11 @@
-from retrieve_data import retrieve_data
+from utils import retrieve_data, process_data
 import lab_3_a, lab_3_b, lab_3_c, lab_3_d, lab_3_e, lab_3_f, lab_3_g, lab_3_h
 
 
 if __name__ == "__main__":
     
-    data = retrieve_data().splitlines(True)
+    raw_data = retrieve_data().splitlines(True)
+    data = process_data(raw_data)
     
     # funkcje redukujące
     print("Liczba żądań z kodem 200: ", end="")
