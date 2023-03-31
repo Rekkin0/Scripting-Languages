@@ -1,50 +1,55 @@
-import os, sys, subprocess, csv
+import sys, subprocess, csv
+from utils import BACKUP_DIR, JOURNAL, get_timestamp
 from pathlib import Path
-from datetime import datetime
 
 
-BACKUPS_DIR = Path(os.getenv("BACKUPS_DIR") or "~/.backups").expanduser().resolve()
-
-
-def choose_backup():
-        
-    journal = Path(BACKUPS_DIR) / "journal.csv"
-    with open(journal, "r") as file:
-        journal_data = list(csv.DictReader(file))
+def select_backup() -> str:
+    with open(JOURNAL, "r") as file:
+        journal = list(csv.DictReader(file))
     
     print("Archived backups (most recent first):")
-    for i, entry in enumerate(journal_data[::-1]):
-        date_time = datetime.strptime(entry['timestamp'], "%Y-%m-%d_%H-%M-%S").strftime("%Y-%m-%d %H:%M:%S")
+    for i, entry in enumerate(journal[::-1]):
+        timestamp = get_timestamp(entry['backup_name'])
         print(f"[{i+1}]: \
-              \n\t{date_time} \
+              \n\t{timestamp} \
               \n\t{entry['dirpath']} \
-              \n\t{entry['filename']}")
+              \n\t{entry['backup_name']}")
         
-    choice = int(input("\nChoose a backup to restore: "))
-    return journal_data[-choice]['filename']
-
-
-def restore_backup(backup_name: str):
+    selection = int(input("\nChoose a backup to restore: "))
+    try:
+        return journal[-selection]['backup_name']
+    except:
+        raise Exception("Invalid selection")
     
-    if len(sys.argv) <= 1:
-        dirpath = Path.cwd()
-    else:
-        dirpath = Path(sys.argv[1]).expanduser().resolve()
-        if not dirpath.is_dir():
-            raise Exception(f"{dirpath} is not a directory")
     
-    for root, dirs, files in os.walk(dirpath, topdown=False):
-        for name in files:
-            os.remove(os.path.join(root, name))
-        for name in dirs:
-            os.rmdir(os.path.join(root, name))
+def cleanup_dir(dir: Path) -> None:
+    for file in dir.iterdir():
+        if file.is_dir():
+            cleanup_dir(file)
+            file.rmdir()
+        else:
+            file.unlink()
+            
+            
+def unzip_backup(dir: Path, backup_name: str) -> None:
+    backup = BACKUP_DIR / backup_name
+    subprocess.run(['unzip', '-q', backup, '-d', dir], cwd=BACKUP_DIR)
 
-    backup = BACKUPS_DIR / backup_name
-    subprocess.run(["unzip", "-q", backup, "-d", dirpath], cwd=BACKUPS_DIR)
+
+def restore_backup(dir: Path) -> None:
+    backup_name = select_backup()
+    cleanup_dir(dir)
+    unzip_backup(dir, backup_name)
+    print(f"Backup {backup_name} successfully restored to {dir}")
 
 
 if __name__ == "__main__":
-        
-    backup_name = choose_backup()
-    restore_backup(backup_name)
+    if len(sys.argv) <= 1:
+        dir = Path.cwd()
+    else:
+        dir = Path(sys.argv[1]).expanduser().resolve()
+        if not dir.is_dir():
+            raise Exception(f"{dir} is not a directory") 
+    restore_backup(dir)
+    
  

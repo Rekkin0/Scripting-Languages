@@ -1,49 +1,47 @@
-import os, sys, subprocess, csv
+import sys, subprocess, csv
+from utils import BACKUP_DIR, FILE_TIMESTAMP, JOURNAL_TIMESTAMP, BACKUP_EXTENSION, JOURNAL, FIELDNAMES, get_timestamp
 from pathlib import Path
 from datetime import datetime
 
 
-BACKUPS_DIR = Path(os.getenv("BACKUPS_DIR") or "~/.backups").expanduser().resolve()
+def get_backup_name(dir: Path) -> str:
+    timestamp = datetime.now().strftime(FILE_TIMESTAMP)
+    
+    return f'{timestamp}-{dir.name}.{BACKUP_EXTENSION}'
 
 
-def create_backup() -> str:
-    
-    BACKUPS_DIR.mkdir(parents=True, exist_ok=True)
-        
-    dirpath = Path(sys.argv[1]).expanduser().resolve()
-    if not dirpath.is_dir():
-        raise Exception(f"{dirpath} is not a directory")
-        
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    extension = 'zip'
-    backup_name = f"{timestamp}-{dirpath.name}.{extension}"
-    
-    subprocess.run(["zip", "-qr", backup_name, ".", "-i", "*"], cwd=dirpath)
-    subprocess.run(["mv", backup_name, BACKUPS_DIR], cwd=dirpath)
-    
-    return backup_name
+def archive_backup(dir: Path, backup_name: str) -> None:
+    subprocess.run(['zip', '-qr', backup_name, '.'], cwd=dir)
     
 
-def journal_backup(backup_name: str) -> None:
+def move_backup(dir: Path, backup_name: str) -> None:
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    subprocess.run(['mv', backup_name, BACKUP_DIR], cwd=dir)
+
+
+def update_journal(dir: Path, backup_name: str) -> None:
+    timestamp = get_timestamp(backup_name).strftime(JOURNAL_TIMESTAMP)
+    entry_values = (timestamp, dir, backup_name)
+    entry = dict(zip(FIELDNAMES, entry_values))
     
-    journal = Path(BACKUPS_DIR) / "journal.csv"
-    
-    entry = {
-        "timestamp": backup_name[:19],
-        "dirpath"  : str(Path(sys.argv[1]).expanduser().resolve()),
-        "filename" : backup_name
-    }
-    
-    journal_exists = journal.is_file()
-    
-    with open(journal, "a") as file:
-        writer = csv.DictWriter(file, fieldnames=entry.keys())
+    journal_exists = JOURNAL.is_file()
+    with open(JOURNAL, 'a') as file:
+        writer = csv.DictWriter(file, fieldnames=FIELDNAMES)
         if not journal_exists:
             writer.writeheader()
         writer.writerow(entry)  
-    
 
-if __name__ == "__main__":
-        
-    backup_name = create_backup()
-    journal_backup(backup_name)
+
+def create_backup(dir: Path) -> None:
+    backup_name = get_backup_name(dir)
+    archive_backup(dir, backup_name)
+    move_backup(dir, backup_name)
+    update_journal(dir, backup_name)
+    print(f'Backup {backup_name} successfully created in {BACKUP_DIR}')
+
+
+if __name__ == '__main__':
+    dir = Path(sys.argv[1]).expanduser().resolve()
+    if not dir.is_dir():
+        raise Exception(f'{dir.name} is not a directory. Cannot backup.')
+    create_backup(dir)
