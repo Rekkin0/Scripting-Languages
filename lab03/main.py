@@ -5,7 +5,7 @@ from dictionary_practice import *
 if __name__ == '__main__':
     
     log = read_log()
-    sorted_log = sort_log(log, 6)
+    sorted_log = sort_log(log, 4)
     log_by_addr = get_entries_by_addr(log, 'www-b6.proxy.aol.com')
     log_by_code = get_entries_by_code(log, 302)
     log_failed_4xx, log_failed_5xx = get_failed_reads(log)

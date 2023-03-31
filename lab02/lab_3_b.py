@@ -1,20 +1,12 @@
-from utils import retrieve_data, process_data, get_resource_size
-from typing import List, Match
+from utils import get_data, get_resource_size
+from typing import Match
 
 
-def reduce_resource_size(data: List[Match[str]]) -> float:
-    total_resource_size = 0
-    for line in data:
-        try:
-            total_resource_size += int(get_resource_size(line))
-        except:
-            continue
+def reduce_resource_size(data: list[Match[str]]) -> float:
+    total_resource_size = sum(get_resource_size(line) for line in data)
 
-    return round(total_resource_size / (1000 ** 3), 2)
+    return round(total_resource_size / (1000 ** 3), ndigits=2)
 
 
-if __name__ == "__main__":
-    
-    raw_data = retrieve_data().splitlines(True)
-    data = process_data(raw_data) 
-    print(f"{reduce_resource_size(data)} GB")
+if __name__ == '__main__': 
+    print(f"{reduce_resource_size(get_data())} GB")

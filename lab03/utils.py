@@ -72,7 +72,3 @@ def get_resource_size(line: Match[str]) -> int:
         return int(line.group(5))
     except:
         return 0
- 
-
-if __name__ == '__main__':
-    print(retrieve_raw_data())
