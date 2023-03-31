@@ -48,6 +48,7 @@ def get_host(line: Match[str]) -> str:
 
 def get_datetime(line: Match[str]) -> datetime:
     timestamp = line.group(2).split()[0]
+    
     return datetime.strptime(timestamp, '%d/%b/%Y:%H:%M:%S')
 
 
@@ -57,6 +58,7 @@ def get_request(line: Match[str]) -> str:
 
 def get_resource_path(line: Match[str]) -> str:
     request = get_request(line).split()
+    
     return (request[1] if len(request) > 1 else request[0]).strip()
     
 
