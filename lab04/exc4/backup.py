@@ -6,8 +6,8 @@ from datetime import datetime
 
 def get_backup_name(dir: Path) -> str:
     """
-    Generates for a backup archive of a directory based on the current 
-    time and date.
+    Generates a name for a backup archive of a directory based on 
+    the current time and date.
     """
     timestamp = datetime.now().strftime(FILE_TIMESTAMP)
     
