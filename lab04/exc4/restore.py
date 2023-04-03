@@ -4,6 +4,10 @@ from pathlib import Path
 
 
 def select_backup() -> str:
+    """
+    Prompts the user to select a backup from the ones listed 
+    in the journal file.
+    """
     with open(JOURNAL, "r") as file:
         journal = list(csv.DictReader(file))
     
@@ -14,37 +18,52 @@ def select_backup() -> str:
               \n\t{timestamp} \
               \n\t{entry['dirpath']} \
               \n\t{entry['backup_name']}")
-        
-    selection = int(input("\nChoose a backup to restore: "))
-    try:
-        return journal[-selection]['backup_name']
-    except:
-        raise Exception("Invalid selection")
+    print(f"[{len(journal)+1}]: Cancel")
+    
+    while True:
+        try:
+            selection = int(input("\nChoose a backup to restore: "))
+            if selection == len(journal)+1:
+                break
+            return journal[-selection]['backup_name']
+        except:
+            print("Invalid selection.")
+            
+    exit()
     
     
-def cleanup_dir(dir: Path) -> None:
+def clear_dir(dir: Path) -> None:
+    """
+    Clears the contents of a directory.
+    """
     for file in dir.iterdir():
         if file.is_dir():
-            cleanup_dir(file)
+            clear_dir(file)
             file.rmdir()
         else:
             file.unlink()
             
             
 def unzip_backup(dir: Path, backup_name: str) -> None:
-    backup = BACKUP_DIR / backup_name
-    subprocess.run(['unzip', '-q', backup, '-d', dir], cwd=BACKUP_DIR)
+    """
+    Unzips a backup archive into a directory.
+    """
+    command = ['unzip', '-q', backup_name, '-d', dir]
+    subprocess.run(command, cwd=BACKUP_DIR)
 
 
 def restore_backup(dir: Path) -> None:
+    """
+    Restores a backup to a directory.
+    """
     backup_name = select_backup()
-    cleanup_dir(dir)
+    clear_dir(dir)
     unzip_backup(dir, backup_name)
     print(f"Backup {backup_name} successfully restored to {dir}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 1:
+    if len(sys.argv) < 2:
         dir = Path.cwd()
     else:
         dir = Path(sys.argv[1]).expanduser().resolve()

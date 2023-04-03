@@ -12,10 +12,11 @@ JOURNAL_TIMESTAMP = '%d %b %Y %H:%M:%S'
 BACKUP_EXTENSION = 'zip'
 
 JOURNAL = BACKUP_DIR / 'journal.csv'
-FIELDNAMES = ('timestamp', 'dirpath', 'backup_name')
+FIELD_NAMES = ('timestamp', 'dir_path', 'backup_name')
 
 REGEX = re.compile(r'(.+)-.+')
 def get_timestamp(filename: str) -> datetime:
+    """Returns the timestamp of a backup file parsed from its name."""
     timestamp = REGEX.match(filename)
     if not timestamp:
         raise Exception(f'Invalid filename: {filename}')
