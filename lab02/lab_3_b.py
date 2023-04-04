@@ -1,8 +1,7 @@
-from utils import get_data, get_resource_size
-from typing import Match
+from utils import Data, get_data, get_resource_size
 
 
-def reduce_resource_size(data: list[Match[str]]) -> float:
+def reduce_resource_size(data: Data) -> float:
     total_resource_size = sum(get_resource_size(line) for line in data)
 
     return round(total_resource_size / (1000 ** 3), ndigits=2)

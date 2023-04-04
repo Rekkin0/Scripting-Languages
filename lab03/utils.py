@@ -15,9 +15,10 @@ def retrieve_raw_data() -> str:
 
 
 REGEX = re.compile(r'(.+) - - \[(.+)\] \"(.+)\" (.+) (.+)')
+
 def process_raw_line(raw_line: str) -> Match[str]:
     line = REGEX.match(raw_line)
-    if not line:
+    if line is None:
         raise Exception(f'Invalid line: {raw_line}')
     
     return line

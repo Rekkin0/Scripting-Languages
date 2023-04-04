@@ -3,6 +3,9 @@ from typing import Match
 from datetime import datetime
 
 
+Data = list[Match[str]]
+
+
 def retrieve_raw_data() -> str:
     data = ''
     while True:
@@ -15,15 +18,16 @@ def retrieve_raw_data() -> str:
 
 
 REGEX = re.compile(r'(.+) - - \[(.+)\] \"(.+)\" (.+) (.+)')
+
 def process_raw_line(raw_line: str) -> Match[str]:
     line = REGEX.match(raw_line)
-    if not line:
+    if line is None:
         raise Exception(f'Invalid line: {raw_line}')
     
     return line
 
 
-def process_raw_data(raw_data: list[str]) -> list[Match[str]]:
+def process_raw_data(raw_data: list[str]) -> Data:
     data = []
     for line in raw_data:
         try:

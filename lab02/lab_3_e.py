@@ -1,8 +1,7 @@
-from utils import get_data, get_status_code
-from typing import Match
+from utils import Data, get_data, get_status_code
 
 
-def filter_requests(data: list[Match[str]]) -> list[str]:
+def filter_requests(data: Data) -> list[str]:
     return [line.group() for line in data if get_status_code(line) == 200]
 
 

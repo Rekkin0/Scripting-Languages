@@ -1,8 +1,7 @@
-from utils import get_data, get_resource_path
-from typing import Match
+from utils import Data, get_data, get_resource_path
 
 
-def reduce_image_ratio(data: list[Match[str]]) -> float:
+def reduce_image_ratio(data: Data) -> float:
     image_extensions = ('.gif', '.jpg', '.jpeg', '.xbm')
     image_count = sum(1 for line in data if get_resource_path(line).endswith(image_extensions))
     other_resource_count = len(data) - image_count

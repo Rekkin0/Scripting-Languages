@@ -1,7 +1,8 @@
 import sys, subprocess, csv
-from utils import *
 from pathlib import Path
 from datetime import datetime
+
+from utils import *
 
 
 def get_backup_name(dir: Path) -> str:

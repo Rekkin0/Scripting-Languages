@@ -1,8 +1,7 @@
-from utils import get_data, get_host
-from typing import Match
+from utils import Data, get_data, get_host
 
 
-def filter_download_location(data: list[Match[str]]) -> list[str]:
+def filter_download_location(data: Data) -> list[str]:
     return [line.group() for line in data if get_host(line).endswith('.pl')]
 
 

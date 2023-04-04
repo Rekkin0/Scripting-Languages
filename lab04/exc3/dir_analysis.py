@@ -1,9 +1,14 @@
 import sys, subprocess, csv
-from utils import SCRIPT_DIR, KEYS
 from pathlib import Path
 from collections import Counter
 from _collections_abc import Generator
-from txt_analysis import DictAnalysis
+
+from utils import SCRIPT_DIR, KEYS
+
+
+ResultDict = dict[str, str]
+ResultList = list[ResultDict]
+Outcome = tuple[int, int, int, int, str, str]
 
 
 def get_text_files(dir: Path) -> Generator[Path, None, None]:
@@ -19,7 +24,7 @@ def get_text_files(dir: Path) -> Generator[Path, None, None]:
             continue
 
 
-def analyze_files(dir: Path, include_spaces: bool = False) -> list[DictAnalysis]:
+def analyze_files(dir: Path, include_spaces: bool = False) -> ResultList:
     """
     Runs txt_analysis.py on all text files in a directory and returns a list 
     of dictionaries with the results.
@@ -36,24 +41,24 @@ def analyze_files(dir: Path, include_spaces: bool = False) -> list[DictAnalysis]
     return results
     
     
-def process_results(results: list[DictAnalysis]) -> tuple:
+def process_results(results: ResultList) -> Outcome:
     """
     Processes the results of txt_analysis.py being run on all text files in a directory 
     and returns a tuple with the outcome.
     """
     file_count = len(results)
-    char_count = sum(int(result['char_count']) for result in results) # type: ignore
-    word_count = sum(int(result['word_count']) for result in results) # type: ignore
-    line_count = sum(int(result['line_count']) for result in results) # type: ignore
-    most_common_char = Counter(result['most_common_char'] for result in results).most_common(1)[0][0] # type: ignore
-    most_common_word = Counter(result['most_common_word'] for result in results).most_common(1)[0][0] # type: ignore
+    char_count = sum(int(result['char_count']) for result in results)
+    word_count = sum(int(result['word_count']) for result in results)
+    line_count = sum(int(result['line_count']) for result in results)
+    most_common_char = Counter(result['most_common_char'] for result in results).most_common(1)[0][0]
+    most_common_word = Counter(result['most_common_word'] for result in results).most_common(1)[0][0]
     
     most_common_char, most_common_word = f"'{most_common_char}'", f"'{most_common_word}'"
     
     return file_count, char_count, word_count, line_count, most_common_char, most_common_word
 
 
-def pretty_print_outcome(outcome: tuple) -> None:
+def pretty_print_outcome(outcome: Outcome) -> None:
     """
     Prints the outcome of the processed results of txt_analysis.py being run 
     on all text files in a directory in a neat format.

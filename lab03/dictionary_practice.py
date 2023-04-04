@@ -1,5 +1,6 @@
-from list_tuple_practice import Entry, Log
 from datetime import datetime
+
+from list_tuple_practice import Entry, Log
 
 
 DictEntry = dict[str, str | datetime | int]

@@ -1,8 +1,7 @@
-from utils import get_data, get_datetime
-from typing import Match
+from utils import Data, get_data, get_datetime
 
 
-def filter_download_time(data: list[Match[str]]) -> list[str]:
+def filter_download_time(data: Data) -> list[str]:
     return [line.group() for line in data if (hour := get_datetime(line).hour) >= 22 or hour < 6]
 
 

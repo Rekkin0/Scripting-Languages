@@ -1,6 +1,5 @@
-from utils import get_status_code
-from typing import Match
+from utils import Data, get_status_code
 
 
-def reduce_request(data: list[Match[str]], status_code: int) -> int:
+def reduce_request(data: Data, status_code: int) -> int:
     return sum(1 for line in data if get_status_code(line) == status_code)

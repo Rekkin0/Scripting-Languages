@@ -15,9 +15,10 @@ JOURNAL = BACKUP_DIR / 'journal.csv'
 FIELD_NAMES = ('timestamp', 'dir_path', 'backup_name')
 
 REGEX = re.compile(r'(.+)-.+')
+
 def get_timestamp(filename: str) -> datetime:
     """Returns the timestamp of a backup file parsed from its name."""
     timestamp = REGEX.match(filename)
-    if not timestamp:
+    if timestamp is None:
         raise Exception(f'Invalid filename: {filename}')
     return datetime.strptime(timestamp.group(1), FILE_TIMESTAMP)

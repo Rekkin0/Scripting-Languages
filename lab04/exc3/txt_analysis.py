@@ -1,17 +1,18 @@
 import csv, sys
-from utils import KEYS
 from pathlib import Path
 from collections import Counter
 
+from utils import KEYS
 
-DictAnalysis = dict[str, Path | int | str]
+
+AnalysisDict = dict[str, Path | int | str]
 
 
-def analyze_file(file_path: Path, include_spaces: bool = False) -> DictAnalysis:
+def analyze_file(file_path: Path, include_spaces: bool = False) -> AnalysisDict:
     """
     Analyzes a text file and returns a dictionary with the results.
     """
-    with open(file_path, 'r') as file:
+    with open(file_path) as file:
         text = file.read()
     
     char_count = len(text)

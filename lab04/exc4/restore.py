@@ -1,6 +1,7 @@
 import sys, subprocess, csv
-from utils import BACKUP_DIR, JOURNAL, get_timestamp
 from pathlib import Path
+
+from utils import BACKUP_DIR, JOURNAL, get_timestamp
 
 
 def select_backup() -> str:
@@ -8,7 +9,7 @@ def select_backup() -> str:
     Prompts the user to select a backup from the ones listed 
     in the journal file.
     """
-    with open(JOURNAL, "r") as file:
+    with open(JOURNAL) as file:
         journal = list(csv.DictReader(file))
     
     print("Archived backups (most recent first):")
