@@ -1,4 +1,4 @@
-import sys
+# aggregation
 from pathlib import Path
 
 from utils import LogDict, parse_log
