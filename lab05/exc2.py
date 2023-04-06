@@ -2,8 +2,8 @@
 import re
 from typing import Any
 
-from exc1 import get_lines
-from utils import LogDict, LOG_PATH, parse_log
+from exc1 import get_log_dicts
+from utils import LOG_PATH, LogDict
 
 
 # ZAD 2a w pliku utils.py
@@ -60,9 +60,7 @@ def get_message_type(message: str) -> str:
 
 
 if __name__ == '__main__':
-    for line in get_lines(LOG_PATH):
-        log = parse_log(line)
+    for log in get_log_dicts(LOG_PATH):
         print(get_ipv4s_from_log(log), end='\t')
         print(get_user_from_log(log), end='\t')
-        assert isinstance(message := log['message'], str)
-        print(get_message_type(message))
+        print(get_message_type(message)) # type: ignore

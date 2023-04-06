@@ -1,19 +1,24 @@
 # logging
 import logging, sys
 from datetime import datetime
-from typing import Any
 
-from exc1 import get_lines
+from exc1 import LogDict, get_log_dicts
 from exc2 import LOGIN_SUCCESS_TYPENAME, LOGIN_FAILURE_TYPENAME, CONNECTION_CLOSED_TYPENAME, \
                  INVALID_PASSWORD_TYPENAME, INVALID_USER_TYPENAME, BREAK_IN_ATTEMPT_TYPENAME, \
                  OTHER_TYPENAME, get_message_type
-from utils import LOG_PATH, parse_log
+from utils import LOG_PATH
 
 
 DateTime = tuple[datetime, datetime]
 
 
-DEFAULT_LOGGING_LEVEL = logging.INFO if len(sys.argv) < 2 else sys.argv[1]
+try:
+    DEFAULT_LOGGING_LEVEL = int(sys.argv[1])
+except:
+    DEFAULT_LOGGING_LEVEL = logging.INFO
+
+logging.basicConfig(level=DEFAULT_LOGGING_LEVEL, format='— %(levelname)-8s — %(message)s')
+logger = logging.getLogger()
 
 MESSAGE_TYPE_TO_LOG_LEVEL = {
     LOGIN_SUCCESS_TYPENAME    : logging.INFO,
@@ -25,39 +30,30 @@ MESSAGE_TYPE_TO_LOG_LEVEL = {
     OTHER_TYPENAME            : logging.DEBUG,
 }
 
-logging.basicConfig(level=logging.DEBUG, format='— %(levelname)-8s — %(message)s')
-logger = logging.getLogger()
- 
-
-def log_bytes_read(raw_log: str) -> None:
-    """
-    Log the number of bytes read from a log line.
-    """
-    logger.debug(f'{len(raw_log)} bytes read')
 
 def log_timestamp(date: datetime, time: datetime) -> None:
     """
-    Log the timestamp of a log line.
+    Log a timestamp given date and time.
     """
     print(date.strftime('%b %d').replace(' 0', '  '), end=' ')
     print(time.strftime('%H:%M:%S'), end=' ', flush=True)
 
-def log_line(raw_log: Any) -> None:
+
+def log_entry(log: LogDict) -> None:
     """
-    Log a line from the log file.
+    Log an entry from the log file represented as a dictionary.
     """
-    log = parse_log(raw_log)
     message_type = get_message_type(message := log['message']) # type: ignore
     log_level = MESSAGE_TYPE_TO_LOG_LEVEL[message_type]
     
-    log_bytes_read(raw_log)
+    logger.debug(f"{log['bytes']} bytes read")
     if logger.getEffectiveLevel() <= log_level:
         log_timestamp(log['date'], log['time']) # type: ignore
     logger.log(log_level, message)
         
 
 if __name__ == '__main__':
-    [log_line(line) for line in get_lines(LOG_PATH)]
+    [log_entry(log) for log in get_log_dicts(LOG_PATH)]
 
 
 
