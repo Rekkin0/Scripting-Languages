@@ -33,6 +33,9 @@ def analyze_file(file_path: Path, include_spaces: bool = False) -> AnalysisDict:
 if __name__ == '__main__':
     include_spaces = len(sys.argv) > 1 and sys.argv[1] == '-i'
     file_path = Path(input()).expanduser().resolve()
+    if not file_path.is_file():
+        print(f"{file_path} is not a file.")
+        exit()
     result = analyze_file(file_path, include_spaces)
     writer = csv.DictWriter(sys.stdout, fieldnames=result.keys(), delimiter='\t')
     writer.writerow(result)

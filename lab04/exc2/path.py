@@ -28,6 +28,8 @@ def get_path_dirs_with_exes() -> list[tuple[Path, list[str]]]:
     """
     path_dirs_with_exes = []
     for dir in get_path_dirs():
+        if not dir.exists():
+            continue
         exes = [file.name for file in dir.iterdir() if is_executable(file)]
         path_dirs_with_exes.append((dir, exes))
     return path_dirs_with_exes

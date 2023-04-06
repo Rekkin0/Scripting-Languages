@@ -74,6 +74,9 @@ def pretty_print_outcome(outcome: Outcome) -> None:
 if __name__ == '__main__':
     include_spaces = input('Include spaces in evaluating the most common character? (y/N): ').lower() == 'y'
     dir = Path(sys.argv[1]).expanduser().resolve()
+    if not dir.is_dir():
+        print(f"{dir} is not a directory.")
+        exit()
     results = analyze_files(dir, include_spaces)
     outcome = process_results(results)
     pretty_print_outcome(outcome)

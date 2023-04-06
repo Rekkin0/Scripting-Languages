@@ -62,5 +62,6 @@ def create_backup(dir: Path) -> None:
 if __name__ == '__main__':
     dir = Path(sys.argv[1]).expanduser().resolve()
     if not dir.is_dir():
-        raise Exception(f'{dir.name} is not a directory. Cannot backup.')
+        print(f'{dir.name} is not a directory. Cannot backup.')
+        exit()
     create_backup(dir)

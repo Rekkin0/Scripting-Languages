@@ -69,7 +69,8 @@ if __name__ == "__main__":
     else:
         dir = Path(sys.argv[1]).expanduser().resolve()
         if not dir.is_dir():
-            raise Exception(f"{dir} is not a directory") 
+            print(f"{dir} is not a directory")
+            exit()
     restore_backup(dir)
     
  
