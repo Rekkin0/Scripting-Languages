@@ -12,15 +12,24 @@ def get_users_from_logs(logs: list[LogDict]) -> set[str]:
     """
     return set(user for log in logs if (user := get_user_from_log(log)) is not None)
 
-def get_n_logs_from_random_user(logs: list[LogDict], n: int) -> list[LogDict]:
+
+def get_logs_of_user(logs: list[LogDict], user: str) -> list[LogDict]:
+    """
+    Return a list of all logs of a user.
+    """
+    return [log for log in logs if get_user_from_log(log) == user]
+
+
+def get_n_random_logs_from_random_user(logs: list[LogDict], n: int) -> list[LogDict]:
     """
     Return a list of n logs from a random user in the logs.
     """
     users = get_users_from_logs(logs)
     random_user = random.choice(list(users))
-    user_logs = [log for log in logs if get_user_from_log(log) == random_user]
+    user_logs = get_logs_of_user(logs, random_user)
     
     return random.sample(user_logs, n)
+
 
 def get_user_login_count(logs: list[LogDict]) -> dict[str, int]:
     """
