@@ -1,12 +1,28 @@
 # parsing
 import re
+from datetime import datetime
 from typing import Any
 
-from exc1 import get_log_dicts
-from utils import LOG_PATH, LogDict
+
+LogDict = dict[str, datetime | int | str]
 
 
-# ZAD 2a w pliku utils.py
+LOG_REGEX = re.compile(r'(\w{3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\w+) sshd\[(\d+)\]: (.+)')
+
+def parse_log(line: str) -> LogDict:
+    match = LOG_REGEX.match(line)
+    if match is None:
+        print(f'Invalid line: {line}')
+        exit()
+    date_time, _, process, message = match.groups()
+    
+    return {
+        'bytes'   : len(line),
+        'datetime': datetime.strptime(date_time, '%b %d %H:%M:%S'),
+        'process' : int(process),
+        'message' : message
+    }
+
 
 IPV4_REGEX = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')   
 
@@ -60,7 +76,8 @@ def get_message_type(message: str) -> str:
 
 
 if __name__ == '__main__':
-    for log in get_log_dicts(LOG_PATH):
+    from exc1 import get_log_dicts
+    for log in get_log_dicts('SSH.log'):
         print(get_ipv4s_from_log(log), end='\t')
         print(get_user_from_log(log), end='\t')
-        print(get_message_type(message)) # type: ignore
+        print(get_message_type(log['message'])) # type: ignore
