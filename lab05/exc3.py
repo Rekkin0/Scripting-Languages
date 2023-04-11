@@ -8,12 +8,7 @@ from exc2 import LOGIN_SUCCESS_TYPENAME, LOGIN_FAILURE_TYPENAME, CONNECTION_CLOS
                  OTHER_TYPENAME, LogDict, get_message_type
 
 
-try:
-    LOGGING_LEVEL = int(sys.argv[1])
-except:
-    LOGGING_LEVEL = logging.INFO
-
-logging.basicConfig(level=LOGGING_LEVEL, format='— %(levelname)-8s — %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='— %(levelname)-8s — %(message)s')
 logger = logging.getLogger()
 
 MESSAGE_TYPE_TO_LOG_LEVEL = {
@@ -25,6 +20,21 @@ MESSAGE_TYPE_TO_LOG_LEVEL = {
     BREAK_IN_ATTEMPT_TYPENAME : logging.CRITICAL,
     OTHER_TYPENAME            : logging.DEBUG,
 }
+
+LEVEL_TEXT_TO_LOG_LEVEL = {
+    'DEBUG'   : logging.DEBUG,
+    'INFO'    : logging.INFO,
+    'WARNING' : logging.WARNING,
+    'ERROR'   : logging.ERROR,
+    'CRITICAL': logging.CRITICAL,
+}
+
+
+def set_logging_level(level: str) -> None:
+    """
+    Set the logging level.
+    """
+    logger.setLevel(LEVEL_TEXT_TO_LOG_LEVEL[level])
 
 
 def log_timestamp(date_time: datetime) -> None:
@@ -44,7 +54,7 @@ def log_entry(log: LogDict) -> None:
     log_level = MESSAGE_TYPE_TO_LOG_LEVEL[message_type]
     
     logger.debug(f"{log['bytes']} bytes read")
-    if LOGGING_LEVEL <= log_level:
+    if logger.getEffectiveLevel() <= log_level:
         log_timestamp(log['datetime']) # type: ignore
     logger.log(log_level, message)
         
