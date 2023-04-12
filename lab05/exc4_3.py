@@ -13,7 +13,7 @@ def get_users(logs: list[LogDict]) -> list[str]:
             if (user := get_user_from_log(log)) is not None]
 
 
-def get_most_and_least_active_users(logs: list[LogDict]) -> tuple[list[str], list[str]]:
+def get_most_least_active_users(logs: list[LogDict]) -> tuple[list[str], list[str]]:
     """
     Return a tuple of two lists, with the least and most active 
     users respectively (in terms of frequency of logging in).
@@ -40,4 +40,4 @@ def get_most_and_least_active_users(logs: list[LogDict]) -> tuple[list[str], lis
 
 if __name__ == '__main__':
     logs = get_log_dicts('SSH.log')
-    print(get_most_and_least_active_users(logs))
+    print(get_most_least_active_users(logs))

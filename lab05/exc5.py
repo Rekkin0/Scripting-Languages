@@ -1,11 +1,11 @@
 import argparse
 
-from exc1 import get_log_dicts
+from exc1 import get_lines, get_log_dicts
 from exc2 import parse_log, get_ipv4s_from_log, get_user_from_log, get_message_type
 from exc3 import set_logging_level, log_entry
 from exc4_1 import get_n_random_logs_from_random_user
 from exc4_2 import get_global_session_stats, get_session_stats_per_user
-from exc4_3 import get_most_and_least_active_users
+from exc4_3 import get_most_least_active_users
 
 
 parser = argparse.ArgumentParser(description='')
@@ -13,53 +13,62 @@ parser.add_argument('log_file',
                     type=str, 
                     help='path to the log file')
 parser.add_argument('-l', '--level', 
-                    type=str, 
+                    type=str.lower, 
                     help='logging level', 
-                    default='INFO', 
-                    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
+                    default='info', 
+                    choices=['debug', 'info', 'warning', 'error', 'critical'])
 
 subparsers = parser.add_subparsers(dest='command', 
-                                   help='sub-command help')
+                                   help='sub-commands')
 
 
 def parse_log_command():
-    print(parse_log(args.log_line))
+    lines = get_lines(args.log_file)
+    log_line = lines[args.log_line-1]
+    print(parse_log(log_line-1))
+
 
 parse_log_parser = subparsers.add_parser('parse-log')
 parse_log_parser.add_argument('log_line',
-                              type=str,
-                              help='log line to parse')
+                              type=int,
+                              help='number of log line to parse')
 parse_log_parser.set_defaults(func=parse_log_command)
 
 
 def get_ipv4s_from_log_command():
-    print(get_ipv4s_from_log(parse_log(args.log_line)))
+    lines = get_lines(args.log_file)
+    log_line = lines[args.log_line-1]
+    print(get_ipv4s_from_log(parse_log(log_line)))
     
 get_ipv4s_from_log_parser = subparsers.add_parser('ipv4s')
 get_ipv4s_from_log_parser.add_argument('log_line',
-                                       type=str,
-                                       help='log line to parse')
+                                       type=int,
+                                       help='number of log line to parse')
 get_ipv4s_from_log_parser.set_defaults(func=get_ipv4s_from_log_command)
 
 
 def get_user_from_log_command():
-    print(get_user_from_log(parse_log(args.log_line)))
+    lines = get_lines(args.log_file)
+    log_line = lines[args.log_line-1]
+    print(get_user_from_log(parse_log(log_line)))
     
 get_user_from_log_parser = subparsers.add_parser('user')
 get_user_from_log_parser.add_argument('log_line',
-                                      type=str,
-                                      help='log line to parse')
+                                      type=int,
+                                      help='number of log line to parse')
 get_user_from_log_parser.set_defaults(func=get_user_from_log_command)
 
 
 def get_message_type_command():
-    assert isinstance(message := parse_log(args.log_line)['message'], str)
+    lines = get_lines(args.log_file)
+    log_line = lines[args.log_line-1]
+    assert isinstance(message := parse_log(log_line)['message'], str)
     print(get_message_type(message))
     
 get_message_type_parser = subparsers.add_parser('message-type')
 get_message_type_parser.add_argument('log_line',
-                                     type=str,
-                                     help='log line to parse')
+                                     type=int,
+                                     help='number of log line to parse')
 get_message_type_parser.set_defaults(func=get_message_type_command)
 
 
@@ -99,17 +108,19 @@ get_session_stats_per_user_parser = subparsers.add_parser('per-user-stats')
 get_session_stats_per_user_parser.set_defaults(func=get_session_stats_per_user_command)
 
 
-def get_most_and_least_active_users_command():
-    least_active, most_active = get_most_and_least_active_users(get_log_dicts(args.log_file))
+def get_most_least_active_users_command():
+    least_active, most_active = get_most_least_active_users(get_log_dicts(args.log_file))
     print(f'LEAST ACTIVE: {least_active}\nMOST ACTIVE: {most_active}')
     
-get_most_and_least_active_users_parser = subparsers.add_parser('most-least-active-users')
-get_most_and_least_active_users_parser.set_defaults(func=get_most_and_least_active_users_command)
+get_most_least_active_users_parser = subparsers.add_parser('most-least-active-users')
+get_most_least_active_users_parser.set_defaults(func=get_most_least_active_users_command)
 
 
 try:
     args = parser.parse_args()
     args.func()
-except:
-    print('Something went wrong. Please check your input and try again.')
+except AttributeError:
+    print("Something went wrong (you probably didn't specify "
+          "the command you want to execute). Please check your "
+          "input and try again or use '--help'.")
     exit()

@@ -31,15 +31,10 @@ def get_log_dicts(file_path: str) -> list[LogDict]:
         print(f'File {file_path} does not exist.')
         exit()
     
-    """ log_dicts = []
-    for i, line in enumerate(get_lines(file_path)):
-        log_dicts.append(parse_log(line))
-        if i == 110000:
-            break
-    return log_dicts """
     return [parse_log(line) for line in get_lines(file_path)]
     
     
 if __name__ == '__main__':
-    print(*get_lines('SSH.log'))
+    # print(*get_lines('SSH.log'))
     print(*get_log_dicts('SSH.log'), sep='\n')
+    pass

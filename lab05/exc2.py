@@ -80,4 +80,4 @@ if __name__ == '__main__':
     for log in get_log_dicts('SSH.log'):
         print(get_ipv4s_from_log(log), end='\t')
         print(get_user_from_log(log), end='\t')
-        print(get_message_type(log['message'])) # type: ignore
+        print(get_message_type(log['message'])) # type: ignore     

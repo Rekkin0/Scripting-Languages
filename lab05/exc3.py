@@ -8,7 +8,7 @@ from exc2 import LOGIN_SUCCESS_TYPENAME, LOGIN_FAILURE_TYPENAME, CONNECTION_CLOS
                  OTHER_TYPENAME, LogDict, get_message_type
 
 
-logging.basicConfig(level=logging.DEBUG, format='— %(levelname)-8s — %(message)s')
+logging.basicConfig(level=logging.INFO, format='— %(levelname)-8s — %(message)s')
 logger = logging.getLogger()
 
 MESSAGE_TYPE_TO_LOG_LEVEL = {
@@ -22,11 +22,11 @@ MESSAGE_TYPE_TO_LOG_LEVEL = {
 }
 
 LEVEL_TEXT_TO_LOG_LEVEL = {
-    'DEBUG'   : logging.DEBUG,
-    'INFO'    : logging.INFO,
-    'WARNING' : logging.WARNING,
-    'ERROR'   : logging.ERROR,
-    'CRITICAL': logging.CRITICAL,
+    'debug'   : logging.DEBUG,
+    'info'    : logging.INFO,
+    'warning' : logging.WARNING,
+    'error'   : logging.ERROR,
+    'critical': logging.CRITICAL,
 }
 
 
@@ -52,7 +52,7 @@ def log_entry(log: LogDict) -> None:
     """
     message_type = get_message_type(message := log['message']) # type: ignore
     log_level = MESSAGE_TYPE_TO_LOG_LEVEL[message_type]
-    
+
     logger.debug(f"{log['bytes']} bytes read")
     if logger.getEffectiveLevel() <= log_level:
         log_timestamp(log['datetime']) # type: ignore
@@ -60,4 +60,6 @@ def log_entry(log: LogDict) -> None:
         
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        set_logging_level(sys.argv[1])
     [log_entry(log) for log in get_log_dicts('SSH.log')]
