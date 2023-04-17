@@ -37,11 +37,11 @@ def set_logging_level(level: str) -> None:
     logger.setLevel(LEVEL_TEXT_TO_LOG_LEVEL[level])
 
 
-def log_timestamp(date_time: datetime) -> None:
+def log_timestamp(timestamp: datetime) -> None:
     """
     Log a timestamp given date and time.
     """
-    date, time = date_time.date(), date_time.time()
+    date, time = timestamp.date(), timestamp.time()
     print(date.strftime('%b %d').replace(' 0', '  '), end=' ')
     print(time.strftime('%H:%M:%S'), end=' ', flush=True)
 
@@ -55,7 +55,7 @@ def log_entry(log: LogDict) -> None:
 
     logger.debug(f"{log['bytes']} bytes read")
     if logger.getEffectiveLevel() <= log_level:
-        log_timestamp(log['datetime']) # type: ignore
+        log_timestamp(log['timestamp']) # type: ignore
     logger.log(log_level, message)
         
 

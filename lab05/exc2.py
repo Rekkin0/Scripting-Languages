@@ -8,19 +8,24 @@ LogDict = dict[str, datetime | int | str]
 
 
 LOG_REGEX = re.compile(r'(\w{3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\w+) sshd\[(\d+)\]: (.+)')
+TIMESTAMP_FORMAT = '%b %d %H:%M:%S'
 
 def parse_log(line: str) -> LogDict:
+    """
+    Parse a log line to a dictionary.
+    """
     match = LOG_REGEX.match(line)
     if match is None:
         print(f'Invalid line: {line}')
         exit()
-    date_time, _, process, message = match.groups()
+    timestamp, hostname, process, message = match.groups()
     
     return {
-        'bytes'   : len(line),
-        'datetime': datetime.strptime(date_time, '%b %d %H:%M:%S'),
-        'process' : int(process),
-        'message' : message
+        'bytes'    : len(line),
+        'timestamp': datetime.strptime(timestamp, TIMESTAMP_FORMAT),
+        'hostname' : hostname,
+        'process'  : int(process),
+        'message'  : message
     }
 
 

@@ -34,8 +34,8 @@ def get_session_duration(log_index: int, log: LogDict, logs: list[LogDict]) -> f
     if session_end_log is None:
         return None
     
-    assert isinstance(session_start_time := log['datetime'], datetime)
-    assert isinstance(session_end_time := session_end_log['datetime'], datetime)
+    assert isinstance(session_start_time := log['timestamp'], datetime)
+    assert isinstance(session_end_time := session_end_log['timestamp'], datetime)
     return (session_end_time - session_start_time).total_seconds()
     
 
