@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print('__gt__, __lt__:\t', entry4 > entry3, entry1 < entry2)
     print('__eq__:\t', entry2 == entry3, entry1 == entry1)
     
-    #can be iterated
+    # zad 7, can be iterated
     for entry in journal:
         pass
     
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     print('get_entries_by_ipv4:\t', journal.get_entries_by_ipv4('119.137.62.142'))
     print('get_entries_in_time_range:\t', journal.get_entries_in_time_range('9/12', '10/12')) # date format: dd/mm
     
+    # zad 8
     user1 = SSHUser("fztu", "10/12/2020 09:32:20") # date format: dd/mm/yyyy hh:mm:ss
     user2 = SSHUser("^*&%(@#)", "10/12/2020 09:32:20")
     
