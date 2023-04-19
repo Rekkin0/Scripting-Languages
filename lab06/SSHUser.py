@@ -1,6 +1,9 @@
 import re
 from datetime import datetime
 
+from ErrorSSHLogEntry import ErrorSSHLogEntry
+from OtherSSHLogEntry import OtherSSHLogEntry
+
 
 USERNAME_REGEX = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
 

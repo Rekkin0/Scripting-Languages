@@ -83,3 +83,4 @@ class SSHLogEntry(ABC):
         if not isinstance(other, SSHLogEntry):
             return NotImplemented
         return self.timestamp > other.timestamp  # type: ignore
+    

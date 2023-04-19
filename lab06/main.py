@@ -1,7 +1,7 @@
-from SSHLogEntryAcceptedPassword import SSHLogEntryAcceptedPassword
-from SSHLogEntryFailedPassword import SSHLogEntryFailedPassword
-from SSHLogEntryError import SSHLogEntryError
-from SSHLogEntryOther import SSHLogEntryOther
+from AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry
+from FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry
+from ErrorSSHLogEntry import ErrorSSHLogEntry
+from OtherSSHLogEntry import OtherSSHLogEntry
 from SSHLogJournal import SSHLogJournal
 from SSHUser import SSHUser
 
@@ -20,30 +20,58 @@ if __name__ == '__main__':
     entry1, entry2 = journal.get_entry(0), journal.get_entry(1)
     entry3, entry4 = journal.get_entry(2), journal.get_entry(3)
     
-    print(entry1)
+    print(entry2)
     print('has ip:\t', entry2.has_ipv4, entry2.get_ipv4())
+    print(entry4)
     print('no ip:\t', entry4.has_ipv4, entry4.get_ipv4())
+    print()
     
-    wrong_entry = SSHLogEntryAcceptedPassword('Dec 10 09:31:24 LabSZ sshd[24676]: Failed password for invalid user FILTER from 104.192.3.34 port 33738 ssh2')
-    print('validate:\t', entry1.validate(), wrong_entry.validate())
+    print(entry1)
+    print('validate:\t', entry1.validate())
+    wrong_entry = AcceptedPasswordSSHLogEntry('Dec 10 09:31:24 LabSZ sshd[24676]: Failed password for invalid user FILTER from 104.192.3.34 port 33738 ssh2')
+    print(wrong_entry)
+    print('validate:\t', wrong_entry.validate())
+    print()
     
-    print('__gt__, __lt__:\t', entry4 > entry3, entry1 < entry2)
-    print('__eq__:\t', entry2 == entry3, entry1 == entry1)
+    print('[1]', entry1)
+    print('[2]', entry2)
+    print('2 > 1:\t', entry2 > entry1)
+    print('[3]', entry3)
+    print('1 < 3:\t', entry1 < entry3)
+    print('1 == 2:\t', entry1 == entry2)
+    print('3 == 3:\t', entry3 == entry3)
+    print()
     
-    # zad 7, can be iterated
+    # zad 7
+    # can be iterated
+    print('entries in journal (iterable):')
     for entry in journal:
-        pass
+        print(entry)
+    print('journal len:\t', len(journal))
+    print()
+    print(entry1)
+    print('in journal:\t', entry1 in journal)
+    print(wrong_entry)
+    print('in journal:\t', wrong_entry in journal)
+    print()
     
-    print('__len__:\t', len(journal))
-    print('__contains__:\t', entry1 in journal, wrong_entry in journal)
-    
-    print('get_entries_by_ipv4:\t', journal.get_entries_by_ipv4('119.137.62.142'))
-    print('get_entries_in_time_range:\t', journal.get_entries_in_time_range('9/12', '10/12')) # date format: dd/mm
+    print('get entries by ipv4 (119.137.62.142):\t', journal.get_entries_by_ipv4('119.137.62.142'))
+    print()
+    print('get entries in time range (from 10 to 11 Dec (exclusive)):\t', end='')
+    print(journal.get_entries_in_time_range('10/12', '11/12')) # date format: dd/mm
+    print()
     
     # zad 8
     user1 = SSHUser("fztu", "10/12/2020 09:32:20") # date format: dd/mm/yyyy hh:mm:ss
+    print('user1', user1)
     user2 = SSHUser("^*&%(@#)", "10/12/2020 09:32:20")
+    print('user2', user2)
     
     all_list = [entry1, entry2, entry3, entry4, user1, user2]
-    print('validate all:\t', end='')
-    [print(entry.validate(), end=' ') for entry in all_list]
+    print('validate all (exc8):\t')
+    [print(entry, ':', entry.validate()) for entry in all_list]
+    print()
+    
+    not_a_log = 'ghrkjeklgsbvcadelrhblf'
+    print('can append to journal:', not_a_log)
+    journal.append(not_a_log)

@@ -1,12 +1,12 @@
-from SSHLogEntry import SSHLogEntry
-from SSHLogEntryAcceptedPassword import SSHLogEntryAcceptedPassword
-from SSHLogEntryFailedPassword import SSHLogEntryFailedPassword
-from SSHLogEntryError import SSHLogEntryError
-from SSHLogEntryOther import SSHLogEntryOther
-
 from datetime import datetime
 from ipaddress import IPv4Address
 from typing import Iterator
+
+from SSHLogEntry import SSHLogEntry
+from AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry, ACCEPTED_PASSWORD_REGEX
+from FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry, FAILED_PASSWORD_REGEX
+from ErrorSSHLogEntry import ErrorSSHLogEntry, ERROR_REGEX
+from OtherSSHLogEntry import OtherSSHLogEntry
 
 
 class SSHLogJournal:
@@ -22,24 +22,27 @@ class SSHLogJournal:
     def __iter__(self) -> Iterator[SSHLogEntry]:
         return iter(self.entries)
     
-    def get_entry_types(self) -> list:
+    def create_entry(self, log: str) -> SSHLogEntry:
         """
-        Get all possible types of an entry 
-        based on the log message.
+        Create a log entry based on the log message.
         """
-        return [SSHLogEntryAcceptedPassword,
-                SSHLogEntryFailedPassword,
-                SSHLogEntryError,
-                SSHLogEntryOther]
+        if ACCEPTED_PASSWORD_REGEX.search(log) is not None:
+            return AcceptedPasswordSSHLogEntry(log)
+        if FAILED_PASSWORD_REGEX.search(log) is not None:
+            return FailedPasswordSSHLogEntry(log)
+        if ERROR_REGEX.search(log) is not None:
+            return ErrorSSHLogEntry(log)
+        
+        return OtherSSHLogEntry(log)
 
     def append(self, log: str) -> None:
         """
         Append a log entry to the journal.
         """
-        for entry_type in self.get_entry_types():
-            if (entry := entry_type(log)).validate():
-                self.entries.append(entry)
-                break
+        entry = self.create_entry(log)
+        if entry.validate():
+            self.entries.append(entry)
+
 
     def get_entry(self, index: int) -> SSHLogEntry:
         """
