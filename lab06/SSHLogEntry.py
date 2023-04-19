@@ -11,26 +11,26 @@ IPV4_REGEX = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
 TIMESTAMP_FORMAT = '%b %d %H:%M:%S'
 
 
-class SSHLogEntry():
-    def __init__(self, line: str) -> None:
-        self.log       = self.parse_log(line)
-        self.bytes     = self.log['bytes']
-        self.timestamp = self.log['timestamp']
-        self.hostname  = self.log['hostname']
-        self.process   = self.log['process']
-        self.__message = self.log['message']
+class SSHLogEntry(ABC):
+    def __init__(self, log: str) -> None:
+        self.entry     = self.parse_log(log)
+        self.bytes     = self.entry['bytes']
+        self.timestamp = self.entry['timestamp']
+        self.hostname  = self.entry['hostname']
+        self.process   = self.entry['process']
+        self._message  = self.entry['message']
 
-    def parse_log(self, line: str) -> LogDict:
+    def parse_log(self, log: str) -> LogDict:
         """
         Parse a log line to a dictionary.
         """
-        match = LOG_REGEX.match(line)
+        match = LOG_REGEX.match(log)
         if match is None:
-            raise SystemExit(f'Invalid line: {line}')
+            raise SystemExit(f'Invalid line: {log}')
         timestamp, hostname, process, message = match.groups()
     
         return {
-            'bytes'    : len(line),
+            'bytes'    : len(log),
             'timestamp': datetime.strptime(timestamp, TIMESTAMP_FORMAT),
             'hostname' : hostname,
             'process'  : int(process),
@@ -42,7 +42,7 @@ class SSHLogEntry():
         Return an IPv4Address object if the log entry 
         contains an IPv4 address, None otherwise.
         """
-        match = IPV4_REGEX.search(self.__message)  # type: ignore
+        match = IPV4_REGEX.search(self._message)  # type: ignore
         return IPv4Address(match.group(0)) if match else None
     
     @property
@@ -61,13 +61,13 @@ class SSHLogEntry():
     
     def __str__(self) -> str:
         timestamp = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
-        return f'[{timestamp}] [{self.hostname}] [{self.process}] {self.__message}'
+        return f'[{timestamp}] [{self.hostname}] [{self.process}] {self._message}'
     
     def __repr__(self) -> str:
         timestamp = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
         return f'{self.__class__.__name__}(bytes={self.bytes}, ' \
                f'timestamp={timestamp}, hostname={self.hostname}, ' \
-               f'process={self.process}, message={self.__message})'
+               f'process={self.process}, message={self._message})'
                
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, SSHLogEntry):
