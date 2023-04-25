@@ -1,35 +1,35 @@
 import logging
-from typing import Callable, Any
+from typing import ParamSpec, TypeVar, Callable
 from functools import wraps
-from time import perf_counter
 
 
-CallableToObject = Callable[..., object]
+P = ParamSpec('P')
+R = TypeVar('R')
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s — %(levelname)-8s — %(message)s')
-def log(level: int) -> Callable:
-    def decorator(obj: CallableToObject) -> CallableToObject:
+def log(level: int) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    def decorator(obj: Callable[P, R]) -> Callable[P, R]:
         @wraps(obj)
-        def wrapper(*args: Any, **kwargs: Any) -> object:
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             if isinstance(obj, type):
-                instance: object = obj(*args, **kwargs)
+                instance: R = obj(*args, **kwargs)
                 logging.log(level, f'Instantiated {obj.__name__}({args}, {kwargs})')
                 return instance
             else:
+                from time import perf_counter
                 start:   float = perf_counter()
-                result: object = obj(*args, **kwargs)
-                finish:  float = perf_counter()
-                time:    float = finish - start
+                result:      R = obj(*args, **kwargs)
+                time:    float = perf_counter() - start
                 logging.log(level, f'Called {obj.__name__}({args}, {kwargs}), '
-                            f'took {time:.1g} seconds, returned: {result}.')
+                            f'took {time:.2g} seconds, returned: {result}.')
                 return result
         return wrapper
     return decorator
 
-@log(logging.DEBUG)
-def multiply(a: int, b: int) -> int:
-    return a * b
+# @log(logging.DEBUG)
+# def multiply(a: int, b: int) -> int:
+#     return a * b
 
 
-if __name__ == "__main__":
-    multiply(2, 3)
+# if __name__ == "__main__":
+#     multiply(2, 3)

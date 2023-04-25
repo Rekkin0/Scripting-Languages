@@ -1,10 +1,12 @@
 from typing import Optional, Generator
-from functools import cache, _lru_cache_wrapper
+from functools import cache
+import logging
 
-from exc4 import Function, Generator, make_generator, print_generator, fibonacci
+from exc4 import Function, Generator, make_generator, print_generator
+from exc6 import log
 
 
-mem_function: Optional[tuple[Function, _lru_cache_wrapper[int]]] = None
+mem_function: Optional[tuple[Function, ...]] = None
 def make_mem_generator(function: Function) -> Generator:
     """
     Returns a generator that yields the memoized results of a function.
@@ -14,13 +16,15 @@ def make_mem_generator(function: Function) -> Generator:
         mem_function = function, cache(function)
     return make_generator(mem_function[1])
 
+@log(logging.DEBUG)
+def print_generator_timed(generator: Generator, count: int) -> None:
+    print_generator(generator, count)
+
 
 if __name__ == '__main__':
-    print('Fibonacci sequence')
-    print_generator(make_mem_generator(fibonacci), 35)
+    from exc4 import fibonacci
     
-    print('Fibonacci sequence')
-    print_generator(make_mem_generator(fibonacci), 35)
-    
-    print('Squares')
-    print_generator(make_mem_generator(lambda x: x**2), 35)
+    print_generator_timed(make_mem_generator(fibonacci), 35)
+    print('\n')
+    print_generator_timed(make_mem_generator(fibonacci), 35)
+    ...

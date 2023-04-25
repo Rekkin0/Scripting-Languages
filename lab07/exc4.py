@@ -56,3 +56,4 @@ if __name__ == '__main__':
     geom_gen = make_generator(lambda n: a1 * q**(n-1))
     print('Geometric sequence — 2*(-2)^(n-1)')
     print_generator(geom_gen, 15) 
+    ...
