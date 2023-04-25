@@ -8,6 +8,10 @@ R = TypeVar('R')
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s — %(levelname)-8s — %(message)s')
 def log(level: int) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    """
+    Decorator that logs a class being instantiated or a function 
+    being called (the time it took to call it and its return value).
+    """
     def decorator(obj: Callable[P, R]) -> Callable[P, R]:
         @wraps(obj)
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:

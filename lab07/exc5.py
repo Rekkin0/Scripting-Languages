@@ -9,7 +9,8 @@ from exc6 import log
 mem_function: Optional[tuple[Function, ...]] = None
 def make_mem_generator(function: Function) -> Generator:
     """
-    Returns a generator that yields the memoized results of a function.
+    Returns a generator that yields the memoized results
+    of a function.
     """
     global mem_function
     if mem_function is None or mem_function[0] is not function:
@@ -18,6 +19,10 @@ def make_mem_generator(function: Function) -> Generator:
 
 @log(logging.DEBUG)
 def print_generator_timed(generator: Generator, count: int) -> None:
+    """
+    Prints the results of a generator and logs the time
+    it took to generate them.
+    """
     print_generator(generator, count)
 
 
