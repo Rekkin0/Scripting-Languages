@@ -26,10 +26,10 @@ def log(level: int) -> Callable[[Callable[P, R]], Callable[P, R]]:
         return wrapper
     return decorator
 
-# @log(logging.DEBUG)
-# def multiply(a: int, b: int) -> int:
-#     return a * b
+@log(logging.DEBUG)
+def multiply(a: int, b: int) -> int:
+    return a * b
 
 
-# if __name__ == "__main__":
-#     multiply(2, 3)
+if __name__ == "__main__":
+    multiply(2, 3)
