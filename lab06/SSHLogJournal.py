@@ -11,7 +11,7 @@ from OtherSSHLogEntry import OtherSSHLogEntry
 
 class SSHLogJournal:
     def __init__(self) -> None:
-        self.entries = []
+        self.entries: list[SSHLogEntry] = []
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -69,6 +69,6 @@ class SSHLogJournal:
             end_date   = datetime.strptime(end, '%d/%m')
             
             return [entry for entry in self.entries 
-                    if start_date <= entry.timestamp <= end_date]
+                    if start_date <= entry.timestamp <= end_date]  # type: ignore
         except:
             raise SystemExit('Invalid date')
