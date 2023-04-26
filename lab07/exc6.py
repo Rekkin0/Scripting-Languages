@@ -21,9 +21,9 @@ def log(level: int) -> Callable[[Callable[P, R]], Callable[P, R]]:
                 return instance
             else:
                 from time import perf_counter
-                start:   float = perf_counter()
-                result:      R = obj(*args, **kwargs)
-                time:    float = perf_counter() - start
+                start: float = perf_counter()
+                result:    R = obj(*args, **kwargs)
+                time:  float = perf_counter() - start
                 logging.log(level, f'Called {obj.__name__}({args}, {kwargs}), '
                             f'took {time:.2g} seconds, returned: {result}.')
                 return result
