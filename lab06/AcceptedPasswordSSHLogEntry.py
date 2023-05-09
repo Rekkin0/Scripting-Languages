@@ -1,16 +1,16 @@
 import re
-from typing import Match
+from typing import Pattern, Match
 
 from SSHLogEntry import SSHLogEntry
 
 
-ACCEPTED_PASSWORD_REGEX = re.compile(r'Accepted password for (?P<username>\w+)')
+ACCEPTED_PASSWORD_REGEX: Pattern[str] = re.compile(r'Accepted password for (?P<username>\w+)')
 
 class AcceptedPasswordSSHLogEntry(SSHLogEntry):
     def __init__(self, log: str) -> None:
         super().__init__(log)
-        self.match = self.match_message()
-        self.username = self.get_username()
+        self.match: Match[str] | None = self.match_message()
+        self.username: str | None = self.get_username()
         
     def match_message(self) -> Match[str] | None:
         """
@@ -23,8 +23,8 @@ class AcceptedPasswordSSHLogEntry(SSHLogEntry):
         """
         Get the username from the log entry.
         """
-        return None if self.match is None \
-            else self.match.group('username')
+        return (None if self.match is None 
+                else self.match.group('username'))
     
     def validate(self) -> bool:
         """
@@ -34,7 +34,10 @@ class AcceptedPasswordSSHLogEntry(SSHLogEntry):
     
 
 if __name__ == '__main__':
+    entry: AcceptedPasswordSSHLogEntry
     entry = AcceptedPasswordSSHLogEntry('Dec 10 09:32:20 LabSZ sshd[24680]: Accepted password for fztu from 119.137.62.142 port 49116 ssh2')
+    
+    bad_entry: AcceptedPasswordSSHLogEntry
     bad_entry = AcceptedPasswordSSHLogEntry('Dec 10 09:31:34 LabSZ sshd[24678]: Connection closed by 104.192.3.34 [preauth]')
     
     print(entry)

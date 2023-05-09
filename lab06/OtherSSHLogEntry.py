@@ -1,5 +1,3 @@
-import re
-
 from SSHLogEntry import SSHLogEntry
 
 
@@ -12,6 +10,7 @@ class OtherSSHLogEntry(SSHLogEntry):
     
     
 if __name__ == '__main__':
+    entry: OtherSSHLogEntry
     entry = OtherSSHLogEntry('Dec 10 09:31:34 LabSZ sshd[24678]: Connection closed by 104.192.3.34 [preauth]')
     
     print(entry)

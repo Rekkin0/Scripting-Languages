@@ -39,7 +39,7 @@ class SSHLogJournal:
         """
         Append a log entry to the journal.
         """
-        entry = self.create_entry(log)
+        entry: SSHLogEntry = self.create_entry(log)
         if entry.validate():
             self.entries.append(entry)
 
@@ -65,8 +65,8 @@ class SSHLogJournal:
         Get all log entries that are in the given time range.
         """
         try:
-            start_date = datetime.strptime(start, '%d/%m')
-            end_date   = datetime.strptime(end, '%d/%m')
+            start_date: datetime = datetime.strptime(start, '%d/%m')
+            end_date:   datetime = datetime.strptime(end, '%d/%m')
             
             return [entry for entry in self.entries 
                     if start_date <= entry.timestamp <= end_date]  # type: ignore

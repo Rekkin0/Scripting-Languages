@@ -1,17 +1,17 @@
 import re
-from typing import Match
+from typing import Pattern, Match
 
 from SSHLogEntry import SSHLogEntry
 
 
-FAILED_PASSWORD_REGEX = re.compile(r'Failed password for (?P<user_invalid>invalid user )*(?P<username>\w+)')
+FAILED_PASSWORD_REGEX: Pattern[str] = re.compile(r'Failed password for (?P<user_invalid>invalid user )*(?P<username>\w+)')
 
 class FailedPasswordSSHLogEntry(SSHLogEntry):
     def __init__(self, log: str) -> None:
         super().__init__(log)
-        self.match = self.match_message()
-        self.username = self.get_username()
-        self.valid_user = self.is_user_valid()
+        self.match: Match[str] | None = self.match_message()
+        self.username: str | None = self.get_username()
+        self.valid_user: bool = self.is_user_valid()
         
     def match_message(self) -> Match[str] | None:
         """
@@ -24,25 +24,31 @@ class FailedPasswordSSHLogEntry(SSHLogEntry):
         """
         Get the username from the log entry.
         """
-        return None if self.match is None \
-            else self.match.group('username')
+        return (None if self.match is None
+                else self.match.group('username'))
     
     def is_user_valid(self) -> bool:
         """
         Check if the username is of a valid user.
         """
-        return False if self.match is None \
-            else self.match.group('user_invalid') is None
+        return (False if self.match is None
+                else self.match.group('user_invalid') is None)
     
     def validate(self) -> bool:
         """
         Validate the log entry.
         """
         return self.match is not None
-    
+
+
 if __name__ == '__main__':
+    entry: FailedPasswordSSHLogEntry
     entry = FailedPasswordSSHLogEntry('Dec 10 11:03:41 LabSZ sshd[25453]: Failed password for root from 183.62.140.253 port 52762 ssh2')
+    
+    entry_invalid: FailedPasswordSSHLogEntry
     entry_invalid = FailedPasswordSSHLogEntry('Dec 10 11:03:39 LabSZ sshd[25448]: Failed password for invalid user admin from 103.99.0.122 port 60150 ssh2')
+    
+    bad_entry: FailedPasswordSSHLogEntry
     bad_entry = FailedPasswordSSHLogEntry('Dec 10 09:31:34 LabSZ sshd[24678]: Connection closed by 104.192.3.34 [preauth]')
     
     print(entry)

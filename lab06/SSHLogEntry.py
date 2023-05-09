@@ -2,32 +2,36 @@ import re
 from abc import ABC, abstractmethod
 from ipaddress import IPv4Address
 from datetime import datetime
-from typing import Any
+from typing import Any, Pattern, Match
 
-LogDict = dict[str, datetime | int | str]
+LogDict = dict[str, Any]
 
-LOG_REGEX  = re.compile(r'(\w{3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\w+) sshd\[(\d+)\]: (.+)')
-IPV4_REGEX = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
-TIMESTAMP_FORMAT = '%b %d %H:%M:%S'
+LOG_REGEX:  Pattern[str] = re.compile(r'(\w{3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\w+) sshd\[(\d+)\]: (.+)')
+IPV4_REGEX: Pattern[str] = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
+TIMESTAMP_FORMAT:    str = '%b %d %H:%M:%S'
 
 
 class SSHLogEntry(ABC):
     def __init__(self, log: str) -> None:
-        self.entry     = self.parse_log(log)
-        self.bytes     = self.entry['bytes']
-        self.timestamp = self.entry['timestamp']
-        self.hostname  = self.entry['hostname']
-        self.process   = self.entry['process']
-        self._message  = self.entry['message']
+        self.entry:     LogDict  = self.parse_log(log)
+        self.bytes:     int      = self.entry['bytes']
+        self.timestamp: datetime = self.entry['timestamp']
+        self.hostname:  str      = self.entry['hostname']
+        self.process:   int      = self.entry['process']
+        self._message:  str      = self.entry['message']
 
     def parse_log(self, log: str) -> LogDict:
         """
         Parse a log line to a dictionary.
         """
-        match = LOG_REGEX.match(log)
+        match: Match[str] | None = LOG_REGEX.match(log)
         if match is None:
             raise SystemExit(f'Invalid line: {log}')
-        timestamp, hostname, process, message = match.groups()
+        match_groups: tuple[str | Any, ...] = match.groups()
+        timestamp: str | Any = match_groups[0]
+        hostname:  str | Any = match_groups[1]
+        process:   str | Any = match_groups[2]
+        message:   str | Any = match_groups[3]
     
         return {
             'bytes'    : len(log),
@@ -42,7 +46,7 @@ class SSHLogEntry(ABC):
         Return an IPv4Address object if the log entry 
         contains an IPv4 address, None otherwise.
         """
-        match = IPV4_REGEX.search(self._message)  # type: ignore
+        match: Match[str] | None = IPV4_REGEX.search(self._message)  # type: ignore
         return IPv4Address(match.group(0)) if match else None
     
     @property
@@ -60,11 +64,11 @@ class SSHLogEntry(ABC):
         raise NotImplementedError
     
     def __str__(self) -> str:
-        timestamp = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
+        timestamp: str = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
         return f'[{timestamp}] [{self.hostname}] [{self.process}] {self._message}'
     
     def __repr__(self) -> str:
-        timestamp = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
+        timestamp: str = self.timestamp.strftime(TIMESTAMP_FORMAT)  # type: ignore
         return f'{self.__class__.__name__}(bytes={self.bytes}, ' \
                f'timestamp={timestamp}, hostname={self.hostname}, ' \
                f'process={self.process}, message={self._message})'

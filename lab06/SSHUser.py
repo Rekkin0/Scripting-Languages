@@ -1,16 +1,14 @@
 import re
 from datetime import datetime
-
-from ErrorSSHLogEntry import ErrorSSHLogEntry
-from OtherSSHLogEntry import OtherSSHLogEntry
+from typing import Pattern
 
 
-USERNAME_REGEX = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
+USERNAME_REGEX: Pattern[str] = re.compile(r"^[a-z_][a-z0-9_-]{0,31}$")
 
 class SSHUser:
     def __init__(self, username: str, last_login: str):
-        self.username = username
-        self.last_login = datetime.strptime(last_login, '%d/%m/%Y %H:%M:%S')
+        self.username:        str = username
+        self.last_login: datetime = datetime.strptime(last_login, '%d/%m/%Y %H:%M:%S')
 
     def validate(self) -> bool:
         """

@@ -1,16 +1,16 @@
 import re
-from typing import Match
+from typing import Pattern, Match
 
 from SSHLogEntry import SSHLogEntry
 
 
-ERROR_REGEX = re.compile(r'error: (?P<error>.+) ')
+ERROR_REGEX: Pattern[str] = re.compile(r'error: (?P<error>.+) ')
 
 class ErrorSSHLogEntry(SSHLogEntry):
     def __init__(self, log: str) -> None:
         super().__init__(log)
-        self.match = self.match_message()
-        self.error = self.get_error()
+        self.match: Match[str] | None = self.match_message()
+        self.error: str | None = self.get_error()
         
     def match_message(self) -> Match[str] | None:
         """
@@ -23,8 +23,8 @@ class ErrorSSHLogEntry(SSHLogEntry):
         """
         Get the error from the log entry.
         """
-        return None if self.match is None \
-            else self.match.group('error')
+        return (None if self.match is None
+                else self.match.group('error'))
     
     def validate(self) -> bool:
         """
@@ -34,7 +34,10 @@ class ErrorSSHLogEntry(SSHLogEntry):
     
     
 if __name__ == '__main__':
+    entry: ErrorSSHLogEntry
     entry = ErrorSSHLogEntry('Dec 10 11:03:40 LabSZ sshd[25448]: error: Received disconnect from 103.99.0.122: 14: No more user authentication methods available. [preauth]')
+    
+    bad_entry: ErrorSSHLogEntry
     bad_entry = ErrorSSHLogEntry('Dec 10 09:31:34 LabSZ sshd[24678]: Connection closed by 104.192.3.34 [preauth]')
     
     print(entry)
