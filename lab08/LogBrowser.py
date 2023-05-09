@@ -1,11 +1,11 @@
 import sys
 import PySide6.QtWidgets as QtW
+import PySide6.QtGui as QtG
 
-
-import constants as const
-import log_retrieval as lr
-import log_processing as lp
-import styling
+import resources.constants as const
+import resources.log_retrieval as lr
+import resources.log_processing as lp
+import resources.styling as styling
 
 
 class LogBrowser(QtW.QMainWindow):
@@ -25,11 +25,12 @@ class LogBrowser(QtW.QMainWindow):
         self.setLocale(const.LOCALE)
         
         # Set the application style and palette
-        application.setStyle('Fusion')
+        application.setStyle(styling.STYLE)
         application.setPalette(styling.LIGHT_PALETTE)
         
         # Set the window title and size
         self.setWindowTitle(const.WINDOW_TITLE)
+        self.setWindowIcon(QtG.QIcon('lab08\\resources\\icon.png'))
         self.resize(const.WINDOW_SIZE)
 
         # Create the central widget
@@ -146,7 +147,6 @@ class LogBrowser(QtW.QMainWindow):
         self.details_label.setSizePolicy(const.DETAILS_LABEL_SIZE_POLICY)
         self.details_label.setAlignment(const.DETAILS_LABEL_ALIGNMENT)
         self.details_label.setFont(const.DETAILS_LABEL_BOLD_FONT)
-        #self.details_label.setStyleSheet(const.DETAILS_LABEL_STYLE)
         self.right_layout.addWidget(self.details_label)
 
         # Create the date layout
@@ -299,6 +299,7 @@ class LogBrowser(QtW.QMainWindow):
         
         self.dark_theme_button = QtW.QRadioButton(const.DARK_THEME_BUTTON_LABEL)
         self.dark_theme_button.toggled.connect(self.toggle_dark_theme)
+        self.dark_theme_button.toggle()
         self.buttons_layout.addWidget(self.dark_theme_button, 0, const.DARK_THEME_BUTTON_ALIGNMENT)
 
         self.next_button = QtW.QPushButton(const.NEXT_BUTTON_LABEL)
@@ -353,7 +354,7 @@ class LogBrowser(QtW.QMainWindow):
         to_datetime = self.date_to_datebox.dateTime().toPython()
         
         self.log_list.clear()
-        self.filtered_logs_lines = []
+        self.filtered_logs_lines: list[str] = []
         if not self.log_lines:
             return
         for line in self.log_lines:
@@ -369,7 +370,7 @@ class LogBrowser(QtW.QMainWindow):
         Updates the log details.
         """
         selected_log = self.log_lines[self.log_list.currentRow()]
-        if selected_log is None:
+        if not selected_log:
             return
         detailed_log = lp.parse_log(selected_log)
         self.date_textbox.setText(detailed_log['timestamp'].strftime(const.DATETIME_DATE_FORMAT))
