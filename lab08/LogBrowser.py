@@ -364,6 +364,7 @@ class LogBrowser(QtW.QMainWindow):
             if from_datetime <= timestamp:
                 self.filtered_logs_lines.append(line)
         self.log_lines = self.filtered_logs_lines
+        self.update_log_list()
                       
     def update_log_details(self):
         """
@@ -383,7 +384,7 @@ class LogBrowser(QtW.QMainWindow):
                                       else const.NOT_AVAILABLE_MESSAGE)
         self.category_textbox.setText(lp.get_message_type(detailed_log['message']))
         self.message_textbox.setText(detailed_log['message'])
-        self.size_textbox.setText(str(detailed_log['bytes']))
+        self.size_textbox.setText(str(detailed_log['bytes']) + ' bytes')
         self.update_navigation_buttons()
         
     def update_navigation_buttons(self):
