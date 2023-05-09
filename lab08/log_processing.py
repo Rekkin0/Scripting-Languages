@@ -4,11 +4,11 @@ from datetime import datetime
 from typing import Any
 
 
-LogDict = dict[str, datetime | int | str]
+LogDict = dict[str, Any]
 
 
 LOG_REGEX = re.compile(r'(\w{3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\w+) sshd\[(\d+)\]: (.+)')
-TIMESTAMP_FORMAT = '%b %d %H:%M:%S'
+TIMESTAMP_FORMAT = '%Y %b %d %H:%M:%S'
 
 def parse_log(line: str) -> LogDict:
     """
@@ -22,7 +22,7 @@ def parse_log(line: str) -> LogDict:
     
     return {
         'bytes'    : len(line),
-        'timestamp': datetime.strptime(timestamp, TIMESTAMP_FORMAT),
+        'timestamp': datetime.strptime('2023 ' + timestamp, TIMESTAMP_FORMAT),
         'hostname' : hostname,
         'process'  : int(process),
         'message'  : message
@@ -78,11 +78,3 @@ def get_message_type(message: str) -> str:
         if regex.search(message):
             return message_type
     return OTHER_TYPENAME
-
-
-if __name__ == '__main__':
-    from exc1 import get_log_dicts
-    for log in get_log_dicts('SSH.log'):
-        print(get_ipv4s_from_log(log), end='\t')
-        print(get_user_from_log(log), end='\t')
-        print(get_message_type(log['message'])) # type: ignore     
