@@ -9,7 +9,7 @@ def acronym(words: list[str]) -> str:
     Return the acronym of given words.
     """
     # from functools import reduce
-    # result = reduce(lambda acronym, word: acronym + word[0].upper(), words, '')  # different implementation
+    # return reduce(lambda acronym, word: acronym + word[0].upper(), words, '')  # different implementation
     return ''.join([word[0].upper() for word in words])
 
 @return_except()

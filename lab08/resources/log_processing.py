@@ -16,8 +16,8 @@ def parse_log(line: str) -> LogDict:
     """
     match = LOG_REGEX.match(line)
     if match is None:
-        print(f'Invalid line: {line}')
-        exit()
+        raise Exception(f'Invalid line: {line}')
+        
     timestamp, hostname, process, message = match.groups()
     
     return {

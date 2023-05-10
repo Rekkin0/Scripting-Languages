@@ -11,7 +11,7 @@ IPV4_REGEX: Pattern[str] = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
 TIMESTAMP_FORMAT:    str = '%b %d %H:%M:%S'
 
 
-class SSHLogEntry(ABC):
+class SSHLogEntry():
     def __init__(self, log: str) -> None:
         self.entry:     LogDict  = self.parse_log(log)
         self.bytes:     int      = self.entry['bytes']
@@ -33,6 +33,7 @@ class SSHLogEntry(ABC):
         process:   str | Any = match_groups[2]
         message:   str | Any = match_groups[3]
     
+        try: 
         return {
             'bytes'    : len(log),
             'timestamp': datetime.strptime(timestamp, TIMESTAMP_FORMAT),

@@ -373,7 +373,16 @@ class LogBrowser(QtW.QMainWindow):
         selected_log = self.log_lines[self.log_list.currentRow()]
         if not selected_log:
             return
-        detailed_log = lp.parse_log(selected_log)
+        try:
+            detailed_log = lp.parse_log(selected_log)
+        except Exception as e:
+            self.dialog_box = QtW.QDialog(self)
+            self.dialog_box.setWindowTitle('Something went wrong')
+            self.dialog_layout = QtW.QVBoxLayout(self.dialog_box)
+            self.parsing_error_message = QtW.QLabel(str(e))
+            self.dialog_layout.addWidget(self.parsing_error_message)
+            self.dialog_box.exec()
+            return
         self.date_textbox.setText(detailed_log['timestamp'].strftime(const.DATETIME_DATE_FORMAT))
         self.time_textbox.setText(detailed_log['timestamp'].strftime(const.DATETIME_TIME_FORMAT))
         self.hostname_textbox.setText(detailed_log['hostname'])
