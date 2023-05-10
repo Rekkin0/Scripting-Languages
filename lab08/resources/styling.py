@@ -14,6 +14,8 @@ LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.Mid, QtG.QColor(160, 160, 160, 255
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.Text, QtG.QColor(0, 0, 0, 255))
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.BrightText, QtG.QColor(255, 255, 255, 255))
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.ButtonText, QtG.QColor(0, 0, 0, 255))
+LIGHT_PALETTE.setColor(QtG.QPalette.ColorGroup.Disabled, QtG.QPalette.ColorRole.ButtonText, QtG.QColor(100, 100, 100, 255))
+LIGHT_PALETTE.setColor(QtG.QPalette.ColorGroup.Inactive, QtG.QPalette.ColorRole.ButtonText, QtG.QColor(100, 100, 100, 255))
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.Base, QtG.QColor(255, 255, 255, 255))
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.Window, QtG.QColor(240, 240, 240, 255))
 LIGHT_PALETTE.setColor(QtG.QPalette.ColorRole.Shadow, QtG.QColor(105, 105, 105, 255))
