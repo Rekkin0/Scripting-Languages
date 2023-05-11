@@ -26,21 +26,31 @@ class SSHLogEntry():
         """
         match: Match[str] | None = LOG_REGEX.match(log)
         if match is None:
-            raise SystemExit(f'Invalid line: {log}')
+            raise SystemExit('Invalid log entry')
         match_groups: tuple[str | Any, ...] = match.groups()
         timestamp: str | Any = match_groups[0]
         hostname:  str | Any = match_groups[1]
         process:   str | Any = match_groups[2]
         message:   str | Any = match_groups[3]
     
-        try: 
+        try:
+            timestamp_parsed: datetime = datetime.strptime(timestamp, TIMESTAMP_FORMAT)
+        except:
+            raise SystemExit('Invalid timestamp')
+        
+        try:
+            process_parsed: int = int(process)
+        except:
+            raise SystemExit('Invalid process ID')
+        
         return {
             'bytes'    : len(log),
-            'timestamp': datetime.strptime(timestamp, TIMESTAMP_FORMAT),
+            'timestamp': timestamp_parsed,
             'hostname' : hostname,
-            'process'  : int(process),
+            'process'  : process_parsed,
             'message'  : message
         }
+
         
     def get_ipv4(self) -> IPv4Address | None:
         """
@@ -48,7 +58,10 @@ class SSHLogEntry():
         contains an IPv4 address, None otherwise.
         """
         match: Match[str] | None = IPV4_REGEX.search(self._message)  # type: ignore
-        return IPv4Address(match.group(0)) if match else None
+        try:
+            return IPv4Address(match.group(0)) if match else None
+        except:
+            raise SystemExit('Invalid IPv4 address')
     
     @property
     def has_ipv4(self) -> bool:

@@ -1,7 +1,7 @@
-from AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry
-from FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry
-from ErrorSSHLogEntry import ErrorSSHLogEntry
-from OtherSSHLogEntry import OtherSSHLogEntry
+from log_entries.AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry
+from log_entries.FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry
+from log_entries.ErrorSSHLogEntry import ErrorSSHLogEntry
+from log_entries.OtherSSHLogEntry import OtherSSHLogEntry
 from SSHLogJournal import SSHLogJournal
 from SSHUser import SSHUser
 
