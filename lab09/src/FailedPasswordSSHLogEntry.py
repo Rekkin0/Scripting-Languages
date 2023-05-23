@@ -1,7 +1,7 @@
 import re
 from typing import Pattern, Match
 
-from SSHLogEntry import SSHLogEntry
+from .SSHLogEntry import SSHLogEntry
 
 
 FAILED_PASSWORD_REGEX: Pattern[str] = re.compile(r'Failed password for (?P<user_invalid>invalid user )*(?P<username>\w+)')

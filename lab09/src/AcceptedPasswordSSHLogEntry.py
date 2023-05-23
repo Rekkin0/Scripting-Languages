@@ -1,7 +1,7 @@
 import re
 from typing import Pattern, Match
 
-from SSHLogEntry import SSHLogEntry
+from .SSHLogEntry import SSHLogEntry
 
 
 ACCEPTED_PASSWORD_REGEX: Pattern[str] = re.compile(r'Accepted password for (?P<username>\w+)')

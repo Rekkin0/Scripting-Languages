@@ -2,11 +2,11 @@ from datetime import datetime
 from ipaddress import IPv4Address
 from typing import Iterator
 
-from SSHLogEntry import SSHLogEntry
-from log_entries.AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry, ACCEPTED_PASSWORD_REGEX
-from log_entries.FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry, FAILED_PASSWORD_REGEX
-from log_entries.ErrorSSHLogEntry import ErrorSSHLogEntry, ERROR_REGEX
-from log_entries.OtherSSHLogEntry import OtherSSHLogEntry
+from .SSHLogEntry import SSHLogEntry
+from .AcceptedPasswordSSHLogEntry import AcceptedPasswordSSHLogEntry, ACCEPTED_PASSWORD_REGEX
+from .FailedPasswordSSHLogEntry import FailedPasswordSSHLogEntry, FAILED_PASSWORD_REGEX
+from .ErrorSSHLogEntry import ErrorSSHLogEntry, ERROR_REGEX
+from .OtherSSHLogEntry import OtherSSHLogEntry
 
 
 class SSHLogJournal:
@@ -21,6 +21,9 @@ class SSHLogJournal:
 
     def __iter__(self) -> Iterator[SSHLogEntry]:
         return iter(self.entries)
+    
+    def __getitem__(self, index: int) -> SSHLogEntry:
+        return self.entries[index]
     
     def create_entry(self, log: str) -> SSHLogEntry:
         """

@@ -1,6 +1,6 @@
 import pytest
 
-from SSHLogEntry import SSHLogEntry
+from src.SSHLogEntry import SSHLogEntry
 
 class TestDatetime:
     from datetime import datetime

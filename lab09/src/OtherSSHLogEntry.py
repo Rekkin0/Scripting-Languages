@@ -1,4 +1,4 @@
-from SSHLogEntry import SSHLogEntry
+from .SSHLogEntry import SSHLogEntry
 
 
 class OtherSSHLogEntry(SSHLogEntry):
