@@ -64,4 +64,3 @@ if __name__ == '__main__':
     db_file: Path = db_exists(sys.argv[2])
     load_data(courses_file, db_file)
     print('Data loaded successfully.')
-
