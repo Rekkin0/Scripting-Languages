@@ -10,6 +10,15 @@ def db_exists(db_name: str) -> Path:
         raise SystemExit(f'Database "{db_name}.sqlite3" does not exist.')
     return db_file
 
+def db_not_exists(db_name: str) -> str:
+    """
+    Check if the database does not exist.
+    """
+    db_file: Path = Path(f'{db_name}.sqlite3').resolve()
+    if db_file.is_file():
+        raise SystemExit(f'Database "{db_name}.sqlite3" already exists.')
+    return db_name
+
 def file_exists(file_path: str) -> Path:
     """
     Check if the file exists.
