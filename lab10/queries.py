@@ -104,12 +104,8 @@ def stations_most_started_from(cursor: sqlite3.Cursor, num: int) -> list[Station
     result: list[Station] = cursor.fetchall()
     print(num, "stations most started from:")
     for record in result:
-        print(record[0], record[1])
+        print(f'{record[0]}\t{record[1]}')
     return result
-
-def print_results(results: list[Any]):
-    for row in results:
-        print(row[0], row[1])
 
 def main(db_name: str):
     db: sqlite3.Connection = sqlite3.connect(f'{db_name}.sqlite3')
