@@ -25,12 +25,6 @@ class Notebook(QtW.QListWidget):
     def __setitem__(self, id: int, note: Note) -> None:
         self.notes[id] = note
 
-    def get_by_title(self, title: str) -> Note:
-        for note in self.notes:
-            if note.title == title:
-                return note
-        return None
-
     def index(self, note: Note) -> int:
         return self.notes.index(note)
 
