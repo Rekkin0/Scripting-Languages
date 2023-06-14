@@ -11,8 +11,8 @@ class NotebookGUI(QtW.QMainWindow):
         super().__init__()
         self.setLocale(const.LOCALE)
 
-        self.icon = QtG.QIcon(const.MAIN_WINDOW_ICON)
         self.setWindowTitle(const.MAIN_WINDOW_TITLE)
+        self.icon = QtG.QIcon(const.MAIN_WINDOW_ICON)
         self.setWindowIcon(self.icon)
         self.resize(const.MAIN_WINDOW_SIZE)
         self.setCentralWidget(QtW.QWidget())

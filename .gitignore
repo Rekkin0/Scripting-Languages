@@ -1,6 +1,7 @@
 # MY EXCLUSIONS
 venv-linux/
 venv-win/
+*.db
 
 
 

@@ -1,6 +1,7 @@
 import PySide6.QtCore as QtC
 import PySide6.QtWidgets as QtW
 import PySide6.QtGui as QtG
+from pathlib import Path
 
 
 # LOCALE
@@ -45,7 +46,7 @@ DEFAULT_INITIAL_ENABLED_STATE = False
 
 # MAIN WINDOW
 MAIN_WINDOW_TITLE = "Notebook"
-MAIN_WINDOW_ICON = "resources/icon.png"
+MAIN_WINDOW_ICON = str(Path(__file__).parent / "icon.png")
 MAIN_WINDOW_SIZE = QtC.QSize(800, 600)
 
 # MAIN LAYOUT

@@ -1,10 +1,11 @@
 import sqlite3
 from datetime import datetime
+from pathlib import Path
 
 import resources.constants as const
 
 
-NOTES_DATABASE_PATH = "resources/notebook.db"
+NOTES_DATABASE_PATH = Path(__file__).parent / 'resources' / 'notebook.db'
 CREATE_NOTES_TABLE_SQL = """
     CREATE TABLE IF NOT EXISTS Notes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

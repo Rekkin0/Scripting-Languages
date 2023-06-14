@@ -168,10 +168,15 @@ class NotebookApp(NotebookGUI):
             app.setPalette(styling.LIGHT_PALETTE)
 
 
-if __name__ == "__main__":
+def main():
+    global app
     app = QtW.QApplication(sys.argv)
     app.setStyle(styling.STYLE)
     app.setFont(const.DEFAULT_APP_FONT)
     notebook_app = NotebookApp()
     notebook_app.show()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()
